@@ -30,12 +30,12 @@ function clientCreated(err, createdClient) {
         getVesselControl,
         getVesselGetSurfaceReferenceFrame,
         getVesselFlight,
-        // addPitchToStream,
-        // addRollToStream,
-        // addHeadingToStream,
-        //addSurfaceAltitudeToStream,
+        addPitchToStream,
+        addRollToStream,
+        addHeadingToStream,
+        addSurfaceAltitudeToStream,
         addRotationToStream,
-        // addDirectionToStream
+        addDirectionToStream
     ], function (err) {
         if (err) {
             throw err;
@@ -167,6 +167,7 @@ function streamUpdate(streamState) {
         incrementNextLogTimer();
     }
 }
+
 function incrementNextLogTimer() {
     nextLogTimer = moment.utc().add(logInterval.value, logInterval.period);
 }

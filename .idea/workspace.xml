@@ -2,9 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="fda6e0d7-2ef5-4314-8d2c-c7e38859683b" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/package.json" afterPath="$PROJECT_DIR$/package.json" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/puddle-jumper/1-hover.js" afterPath="$PROJECT_DIR$/puddle-jumper/1-hover.js" />
     </list>
     <ignored path="krpc-node-examples.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -27,33 +25,38 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="1-hover.js" pinned="false" current-in-tab="false">
+      <file leaf-file-name="1-hover.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/puddle-jumper/1-hover.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="507">
-              <caret line="148" column="57" lean-forward="false" selection-start-line="148" selection-start-column="57" selection-end-line="148" selection-end-column="57" />
+            <state relative-caret-position="-1972">
+              <caret line="37" column="8" lean-forward="false" selection-start-line="37" selection-start-column="8" selection-end-line="37" selection-end-column="8" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="space-center.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/node_modules/krpc-node/lib/services/space-center.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="299">
+              <caret line="3690" column="0" lean-forward="false" selection-start-line="3690" selection-start-column="0" selection-end-line="3690" selection-end-column="0" />
               <folding>
-                <element signature="n#!!block;n#getFirstResult#0" expanded="false" />
-                <element signature="n#!!block;n#getResultN#0" expanded="false" />
-                <element signature="n#!!block;n#getClientIdAndActiveVessel#0" expanded="false" />
-                <element signature="n#!!block;n#connectToStreamServer#0" expanded="false" />
-                <element signature="n#!!block;n#getVesselControl#0" expanded="false" />
-                <element signature="n#!!block;n#getVesselGetSurfaceReferenceFrame#0" expanded="false" />
-                <element signature="n#!!block;n#getVesselFlight#0" expanded="false" />
-                <element signature="n#!!block;n#addPitchToStream#0" expanded="false" />
-                <element signature="n#!!block;n#addRollToStream#0" expanded="false" />
-                <element signature="n#!!block;n#addHeadingToStream#0" expanded="false" />
-                <element signature="n#!!block;n#addDirectionToStream#0" expanded="false" />
+                <element signature="e#198#484#0" expanded="false" />
+                <element signature="e#487#599#0" expanded="false" />
+                <element signature="e#652#809#0" expanded="false" />
+                <element signature="e#696#806#0" expanded="false" />
+                <element signature="e#812#1164#0" expanded="false" />
+                <element signature="e#1272#1319#0" expanded="false" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="package.json" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/package.json">
+      <file leaf-file-name="decoders.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/node_modules/krpc-node/lib/decoders.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="415">
-              <caret line="32" column="21" lean-forward="false" selection-start-line="32" selection-start-column="21" selection-end-line="32" selection-end-column="21" />
+            <state relative-caret-position="150">
+              <caret line="21" column="3" lean-forward="false" selection-start-line="21" selection-start-column="3" selection-end-line="21" selection-end-column="3" />
               <folding />
             </state>
           </provider>
@@ -84,9 +87,9 @@
         <option value="$PROJECT_DIR$/init.js" />
         <option value="$PROJECT_DIR$/node_modules/krpc-node/lib/encoders.js" />
         <option value="$PROJECT_DIR$/node_modules/krpc-node/lib/decoders.js" />
-        <option value="$PROJECT_DIR$/puddle-jumper/1-hover.js" />
         <option value="$PROJECT_DIR$/node_modules/krpc-node/lib/client.js" />
         <option value="$PROJECT_DIR$/package.json" />
+        <option value="$PROJECT_DIR$/puddle-jumper/1-hover.js" />
       </list>
     </option>
   </component>
@@ -201,7 +204,20 @@
     <configuration default="true" type="DartTestRunConfigurationType" factoryName="Dart Test">
       <method />
     </configuration>
+    <configuration default="true" type="JavaScriptTestRunnerJest" factoryName="Jest">
+      <node-interpreter value="project" />
+      <working-dir value="" />
+      <envs />
+      <scope-kind value="ALL" />
+      <method />
+    </configuration>
     <configuration default="true" type="JavaScriptTestRunnerKarma" factoryName="Karma">
+      <config-file value="" />
+      <node-interpreter value="project" />
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="true" type="JavaScriptTestRunnerProtractor" factoryName="Protractor">
       <config-file value="" />
       <node-interpreter value="project" />
       <envs />
@@ -273,15 +289,16 @@
       <workItem from="1477743922658" duration="3666000" />
       <workItem from="1489939307164" duration="6634000" />
       <workItem from="1490077149163" duration="1346000" />
-      <workItem from="1491763769016" duration="354000" />
+      <workItem from="1491763769016" duration="796000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="20042000" />
+    <option name="totallyTimeSpent" value="20484000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.17281349" sideWeight="0.496208" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -289,9 +306,9 @@
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.31960997" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32936078" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32936078" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.17281349" sideWeight="0.503792" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.48320693" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.48320693" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -317,52 +334,16 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/node_modules/krpc-node/lib/decoders.js</url>
-          <line>21</line>
-          <option name="timeStamp" value="108" />
-        </line-breakpoint>
-      </breakpoints>
-      <option name="time" value="112" />
+      <option name="time" value="114" />
     </breakpoint-manager>
-    <watches-manager>
-      <configuration name="NodeJSConfigurationType">
-        <watch expression="buffer.readDoubleLE().toString()" language="JavaScript" />
-        <watch expression="buffer.readDoubleBE().toString()" language="JavaScript" />
-        <watch expression="alternativeAnswer" />
-        <watch expression="ByteBuffer.wrap(buffer).readDouble()" language="JavaScript" />
-        <watch expression="buffer.readFloatLE()" language="JavaScript" />
-        <watch expression="buffer.readFloatBE()" language="JavaScript" />
-        <watch expression="buffer.readInt16LE()" language="JavaScript" />
-        <watch expression="buffer.readInt16BE()" language="JavaScript" />
-        <watch expression="buffer.readInt32BE()" language="JavaScript" />
-        <watch expression="buffer.readInt32LE()" language="JavaScript" />
-        <watch expression="buffer.readIntBE()" language="JavaScript" />
-        <watch expression="buffer.readIntLE()" language="JavaScript" />
-        <watch expression="buffer.readUInt8()" language="JavaScript" />
-        <watch expression="buffer.readUIntLE()" language="JavaScript" />
-      </configuration>
-    </watches-manager>
+    <watches-manager />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/puddle-jumper/1-hover.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="n#!!block;n#getFirstResult#0" expanded="false" />
-            <element signature="n#!!block;n#getResultN#0" expanded="false" />
-            <element signature="n#!!block;n#getClientIdAndActiveVessel#0" expanded="false" />
-            <element signature="n#!!block;n#connectToStreamServer#0" expanded="false" />
-            <element signature="n#!!block;n#getVesselControl#0" expanded="false" />
-            <element signature="n#!!block;n#getVesselGetSurfaceReferenceFrame#0" expanded="false" />
-            <element signature="n#!!block;n#getVesselFlight#0" expanded="false" />
-            <element signature="n#!!block;n#addPitchToStream#0" expanded="false" />
-            <element signature="n#!!block;n#addRollToStream#0" expanded="false" />
-            <element signature="n#!!block;n#addHeadingToStream#0" expanded="false" />
-            <element signature="n#!!block;n#addDirectionToStream#0" expanded="false" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -466,14 +447,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/node_modules/krpc-node/lib/decoders.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="861">
-          <caret line="106" column="1" lean-forward="false" selection-start-line="106" selection-start-column="1" selection-end-line="106" selection-end-column="1" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/node_modules/krpc-node/lib/client.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="285">
@@ -481,37 +454,41 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/package.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="415">
+          <caret line="32" column="21" lean-forward="false" selection-start-line="32" selection-start-column="21" selection-end-line="32" selection-end-column="21" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/node_modules/krpc-node/lib/decoders.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="150">
+          <caret line="21" column="3" lean-forward="false" selection-start-line="21" selection-start-column="3" selection-end-line="21" selection-end-column="3" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/node_modules/krpc-node/lib/services/space-center.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="385">
-          <caret line="3655" column="26" lean-forward="false" selection-start-line="3655" selection-start-column="26" selection-end-line="3655" selection-end-column="26" />
+        <state relative-caret-position="299">
+          <caret line="3690" column="0" lean-forward="false" selection-start-line="3690" selection-start-column="0" selection-end-line="3690" selection-end-column="0" />
+          <folding>
+            <element signature="e#198#484#0" expanded="false" />
+            <element signature="e#487#599#0" expanded="false" />
+            <element signature="e#652#809#0" expanded="false" />
+            <element signature="e#696#806#0" expanded="false" />
+            <element signature="e#812#1164#0" expanded="false" />
+            <element signature="e#1272#1319#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/puddle-jumper/1-hover.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="507">
-          <caret line="148" column="57" lean-forward="false" selection-start-line="148" selection-start-column="57" selection-end-line="148" selection-end-column="57" />
-          <folding>
-            <element signature="n#!!block;n#getFirstResult#0" expanded="false" />
-            <element signature="n#!!block;n#getResultN#0" expanded="false" />
-            <element signature="n#!!block;n#getClientIdAndActiveVessel#0" expanded="false" />
-            <element signature="n#!!block;n#connectToStreamServer#0" expanded="false" />
-            <element signature="n#!!block;n#getVesselControl#0" expanded="false" />
-            <element signature="n#!!block;n#getVesselGetSurfaceReferenceFrame#0" expanded="false" />
-            <element signature="n#!!block;n#getVesselFlight#0" expanded="false" />
-            <element signature="n#!!block;n#addPitchToStream#0" expanded="false" />
-            <element signature="n#!!block;n#addRollToStream#0" expanded="false" />
-            <element signature="n#!!block;n#addHeadingToStream#0" expanded="false" />
-            <element signature="n#!!block;n#addDirectionToStream#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/package.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="415">
-          <caret line="32" column="21" lean-forward="false" selection-start-line="32" selection-start-column="21" selection-end-line="32" selection-end-column="21" />
+        <state relative-caret-position="-1972">
+          <caret line="37" column="8" lean-forward="false" selection-start-line="37" selection-start-column="8" selection-end-line="37" selection-end-column="8" />
           <folding />
         </state>
       </provider>
