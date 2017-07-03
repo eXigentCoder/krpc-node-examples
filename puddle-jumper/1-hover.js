@@ -14,9 +14,10 @@ let state = {
 };
 let logInterval = {
     period: 'seconds',
-    value: 1
+    value: 5
 };
 let nextLogTimer = null;
+
 Client(null, clientCreated);
 
 function clientCreated(err, createdClient) {
@@ -34,8 +35,6 @@ function clientCreated(err, createdClient) {
         addRollToStream,
         addHeadingToStream,
         addSurfaceAltitudeToStream,
-        addRotationToStream,
-        addDirectionToStream
     ], function (err) {
         if (err) {
             throw err;
@@ -140,22 +139,6 @@ function addHeadingToStream(callback) {
 function addSurfaceAltitudeToStream(callback) {
     let getThrottle = client.services.spaceCenter.flightGetSurfaceAltitude(state.vessel.surfaceFlightId);
     client.addStream(getThrottle, "Altitude", throttleStreamAdded);
-    function throttleStreamAdded(err) {
-        return callback(err);
-    }
-}
-
-function addRotationToStream(callback) {
-    let getThrottle = client.services.spaceCenter.flightGetRotation(state.vessel.surfaceFlightId);
-    client.addStream(getThrottle, "Rotation", throttleStreamAdded);
-    function throttleStreamAdded(err) {
-        return callback(err);
-    }
-}
-
-function addDirectionToStream(callback) {
-    let getThrottle = client.services.spaceCenter.flightGetDirection(state.vessel.surfaceFlightId);
-    client.addStream(getThrottle, "Direction", throttleStreamAdded);
     function throttleStreamAdded(err) {
         return callback(err);
     }
