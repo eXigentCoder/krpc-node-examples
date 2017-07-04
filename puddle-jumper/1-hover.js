@@ -25,7 +25,7 @@ function clientCreated(err, createdClient) {
         throw err;
     }
     client = createdClient;
-    async.waterfall([
+    async.series([
         getClientIdAndActiveVessel,
         connectToStreamServer,
         getVesselControl,
@@ -35,6 +35,7 @@ function clientCreated(err, createdClient) {
         addRollToStream,
         addHeadingToStream,
         addSurfaceAltitudeToStream,
+        addSpeedToStream
     ], function (err) {
         if (err) {
             throw err;
@@ -114,34 +115,27 @@ function getVesselFlight(callback) {
 
 function addPitchToStream(callback) {
     let getThrottle = client.services.spaceCenter.flightGetPitch(state.vessel.surfaceFlightId);
-    client.addStream(getThrottle, "Pitch", throttleStreamAdded);
-    function throttleStreamAdded(err) {
-        return callback(err);
-    }
+    client.addStream(getThrottle, "Pitch", callback);
 }
 
 function addRollToStream(callback) {
     let getThrottle = client.services.spaceCenter.flightGetRoll(state.vessel.surfaceFlightId);
-    client.addStream(getThrottle, "Roll", throttleStreamAdded);
-    function throttleStreamAdded(err) {
-        return callback(err);
-    }
+    client.addStream(getThrottle, "Roll", callback);
 }
 
 function addHeadingToStream(callback) {
     let getHeading = client.services.spaceCenter.flightGetHeading(state.vessel.surfaceFlightId);
-    client.addStream(getHeading, "Heading", throttleStreamAdded);
-    function throttleStreamAdded(err) {
-        return callback(err);
-    }
+    client.addStream(getHeading, "Heading", callback);
 }
 
 function addSurfaceAltitudeToStream(callback) {
     let getThrottle = client.services.spaceCenter.flightGetSurfaceAltitude(state.vessel.surfaceFlightId);
-    client.addStream(getThrottle, "Altitude", throttleStreamAdded);
-    function throttleStreamAdded(err) {
-        return callback(err);
-    }
+    client.addStream(getThrottle, "Altitude", callback);
+}
+
+function addSpeedToStream(callback){
+    let getSpeed = client.services.spaceCenter.flightGetSpeed(state.vessel.surfaceFlightId);
+    client.addStream(getSpeed, "Speed", callback);
 }
 
 function streamUpdate(streamState) {
