@@ -46,7 +46,8 @@ function clientCreated(err, createdClient) {
             addMassToStream,
             addResourcesToStream,
             setThrottleToMax,
-            launch
+            launch,
+            pointALittleToTheEast
         ],
         function(err) {
             if (err) {
@@ -221,20 +222,25 @@ function launch(callback) {
     client.send(call, callback);
 }
 
+function pointALittleToTheEast(callback) {
+    let call = client.services.spaceCenter.controlSetRight(state.vessel.controlId, 0.1);
+    client.send(call, callback);
+}
+
 let pidOn = false;
 
 // k_p, k_i, k_d, dt (see https://www.npmjs.com/package/node-pid-controller)
 /*
  https://en.wikipedia.org/wiki/PID_controller
  P accounts for present values of the error. For example, if the error is large and positive,
-    the control output will also be large and positive.
+ the control output will also be large and positive.
  I accounts for past values of the error. For example, if the current output is not sufficiently strong,
-    the integral of the error will accumulate over time, and the controller will respond by applying a stronger action.
+ the integral of the error will accumulate over time, and the controller will respond by applying a stronger action.
  D accounts for possible future trends of the error, based on its current rate of change.[2].
-    For example, continuing the P example above, when the large positive control output succeeds in bringing the error
-    closer to zero, it also puts the process on a path to large negative error in the near future; in this case,
-    the derivative turns negative and the D module reduces the strength of the action to prevent this overshot.
-*/
+ For example, continuing the P example above, when the large positive control output succeeds in bringing the error
+ closer to zero, it also puts the process on a path to large negative error in the near future; in this case,
+ the derivative turns negative and the D module reduces the strength of the action to prevent this overshot.
+ */
 let ctr = new Controller(0.05, 0.006, 0.002, 0.05); //Default: 0.25, 0.01, 0.01, 1
 let targetSpeed = 0;
 let breaksDeployed = false;
@@ -246,19 +252,25 @@ function executeHoverLoop(streamState) {
     }
     if (streamState.speed > 0 && !pidOn) {
         pidOn = true;
-        client.send(client.services.spaceCenter.controlSetThrottle(state.vessel.controlId, 0),);
+        client.send([
+            client.services.spaceCenter.controlSetThrottle(state.vessel.controlId, 0),
+            client.services.spaceCenter.controlSetRight(state.vessel.controlId, -0.1)
+        ]);
         return;
     }
-    if(streamState.speed <= 0 && !breaksDeployed){
+    if (streamState.speed <= 0 && !breaksDeployed) {
         breaksDeployed = true;
-        client.send(client.services.spaceCenter.controlSetBrakes(state.vessel.controlId, true));
+        client.send([
+            client.services.spaceCenter.controlSetBrakes(state.vessel.controlId, true),
+            client.services.spaceCenter.controlSetRight(state.vessel.controlId, 0)
+        ]);
     }
-    if(streamState.fuel < 320 && targetSpeed === 0){
-        targetSpeed = -20;
+    if (streamState.fuel < 317 && targetSpeed === 0) {
+        targetSpeed = -25;
         ctr.setTarget(targetSpeed);
         client.send(client.services.spaceCenter.controlSetGear(state.vessel.controlId, true));
     }
-    if(streamState.altitude < 30 && targetSpeed !== -6){
+    if (streamState.altitude < 40 && targetSpeed !== -6) {
         targetSpeed = -6;
         ctr.setTarget(targetSpeed);
         client.send(client.services.spaceCenter.controlSetGear(state.vessel.controlId, true));
