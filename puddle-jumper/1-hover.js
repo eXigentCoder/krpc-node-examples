@@ -2,6 +2,7 @@
 const async = require('async');
 const Client = require('krpc-node');
 const moment = require('moment');
+
 let client = null;
 let state = {
     clientId: null,
@@ -20,12 +21,6 @@ let nextLogTimer = null;
 
 Client(null, clientCreated);
 
-/*
-Equation:
- F (force) = m (mass) * a (acceleration)
-The force (F) or engine thrust required to hover should equal the mass of the vessel (m) * the acceleration exerted upon it from gravity (a)
-*/
-
 function clientCreated(err, createdClient) {
     if (err) {
         throw err;
@@ -37,6 +32,8 @@ function clientCreated(err, createdClient) {
             connectToStreamServer,
             getVesselInfo,
             getVesselFlight,
+            turnSasOn,
+            turnRcsOn,
             addPitchToStream,
             addRollToStream,
             addHeadingToStream,
@@ -45,8 +42,9 @@ function clientCreated(err, createdClient) {
             addThrottleToStream,
             addThrustToStream,
             addMassToStream,
-            turnSasOn,
-            turnRcsOn
+            addVelocityToStream,
+            setThrottleToMax,
+            launch
         ],
         function(err) {
             if (err) {
@@ -99,11 +97,13 @@ function connectToStreamServer(callback) {
 }
 
 function getVesselInfo(callback) {
+    const kerbin = state.celestialBodies['Kerbin'];
     let calls = [
         client.services.spaceCenter.vesselGetControl(state.vessel.id),
         client.services.spaceCenter.vesselGetSurfaceReferenceFrame(state.vessel.id),
         client.services.spaceCenter.vesselGetAutoPilot(state.vessel.id),
-        client.services.spaceCenter.celestialBodyGetSurfaceGravity(state.celestialBodies['Kerbin'])
+        client.services.spaceCenter.celestialBodyGetSurfaceGravity(kerbin),
+        client.services.spaceCenter.celestialBodyGetEquatorialRadius(kerbin)
     ];
     client.send(calls, function(err, response) {
         if (err) {
@@ -113,6 +113,7 @@ function getVesselInfo(callback) {
         state.vessel.surfaceReference = getResultN(response, 1);
         state.vessel.autoPilot = getResultN(response, 2);
         state.surfaceGravity = getResultN(response, 3);
+        state.equatorialRadius = getResultN(response, 4);
         return callback();
     });
 }
@@ -171,9 +172,22 @@ function addMassToStream(callback) {
     client.addStream(getSpeed, 'mass', callback);
 }
 
+function addVelocityToStream(callback) {
+    let getSpeed = client.services.spaceCenter.vesselVelocity(
+        state.vessel.id,
+        state.vessel.surfaceReference
+    );
+    client.addStream(getSpeed, 'velocity', callback);
+}
+
 function streamUpdate(streamState) {
+    executeHoverLoop(streamState);
+    logStreamStateIfRequired(streamState);
+}
+
+function logStreamStateIfRequired(streamState) {
     if (moment.utc().isAfter(nextLogTimer)) {
-        console.log(streamState);
+        console.log(JSON.stringify(streamState, null, 4));
         incrementNextLogTimer();
     }
 }
@@ -183,11 +197,59 @@ function incrementNextLogTimer() {
 }
 
 function turnSasOn(callback) {
-    let getSpeed = client.services.spaceCenter.controlSetSas(state.vessel.controlId, true);
-    client.send(getSpeed, callback);
+    let call = client.services.spaceCenter.controlSetSas(state.vessel.controlId, true);
+    client.send(call, callback);
 }
 
 function turnRcsOn(callback) {
-    let getSpeed = client.services.spaceCenter.controlSetRcs(state.vessel.controlId, true);
-    client.send(getSpeed, callback);
+    let call = client.services.spaceCenter.controlSetRcs(state.vessel.controlId, true);
+    client.send(call, callback);
+}
+
+function setThrottleToMax(callback) {
+    let call = client.services.spaceCenter.controlSetThrottle(state.vessel.controlId, 1);
+    client.send(call, callback);
+}
+
+function launch(callback) {
+    let call = client.services.spaceCenter.controlActivateNextStage(state.vessel.controlId);
+    client.send(call, callback);
+}
+
+/*
+ Equation:
+ F (force) = m (mass) * a (acceleration)
+ The force (F) or engine thrust required to hover should equal the mass of the vessel (m) * the acceleration exerted upon it from gravity (a)
+ */
+function executeHoverLoop(streamState) {
+    if (streamState.altitude < 200) {
+        return;
+    }
+    if (streamState.speed > 0) {
+        if (streamState.throttle > 0) {
+            client.send(client.services.spaceCenter.controlSetThrottle(state.vessel.controlId, 0));
+        }
+        return;
+    }
+    //https://www.mansfieldct.org/Schools/MMS/staff/hand/lawsgravaltitude.htm
+    const gravityAtThisAltitude =
+        state.surfaceGravity /
+        ((state.equatorialRadius + streamState.altitude) / state.equatorialRadius);
+    const forceNeededToCancelGravity = streamState.mass * gravityAtThisAltitude;
+    let forceNeededToCancelSpeed = 0;
+    if (streamState.speed < 0) {
+        //we are falling, so canceling out gravity alone isn't enough
+        forceNeededToCancelSpeed = streamState.mass * Math.abs(streamState.speed);
+    }
+    const forceNeeded = forceNeededToCancelGravity + forceNeededToCancelSpeed;
+    let newThrottleValue = streamState.maxThrust / forceNeeded;
+    if (newThrottleValue > 1) {
+        newThrottleValue = 1;
+    }
+    if (newThrottleValue <= 0) {
+        return;
+    }
+    client.send(
+        client.services.spaceCenter.controlSetThrottle(state.vessel.controlId, newThrottleValue)
+    );
 }
