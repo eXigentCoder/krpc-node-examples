@@ -26,8 +26,8 @@
       <file leaf-file-name="1-hover.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/puddle-jumper/1-hover.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="302">
-              <caret line="184" column="32" lean-forward="false" selection-start-line="184" selection-start-column="32" selection-end-line="184" selection-end-column="32" />
+            <state relative-caret-position="310">
+              <caret line="250" column="5" lean-forward="true" selection-start-line="250" selection-start-column="5" selection-end-line="250" selection-end-column="5" />
               <folding />
             </state>
           </provider>
@@ -36,8 +36,8 @@
       <file leaf-file-name="space-center.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/node_modules/krpc-node/lib/services/space-center.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="141">
-              <caret line="12609" column="62" lean-forward="false" selection-start-line="12609" selection-start-column="62" selection-end-line="12609" selection-end-column="62" />
+            <state relative-caret-position="277">
+              <caret line="3201" column="31" lean-forward="false" selection-start-line="3201" selection-start-column="15" selection-end-line="3201" selection-end-column="31" />
               <folding>
                 <element signature="e#198#484#0" expanded="false" />
                 <element signature="e#487#599#0" expanded="false" />
@@ -693,7 +693,6 @@
                 <element signature="e#111772#112004#0" expanded="false" />
                 <element signature="e#111801#111871#0" expanded="false" />
                 <element signature="e#111884#112001#0" expanded="false" />
-                <element signature="e#112007#112242#0" expanded="false" />
                 <element signature="e#112312#112523#0" expanded="false" />
                 <element signature="e#112341#112381#0" expanded="false" />
                 <element signature="e#112394#112520#0" expanded="false" />
@@ -2839,6 +2838,7 @@
                 <element signature="e#437849#438106#0" expanded="false" />
                 <element signature="e#437955#438100#0" expanded="false" />
                 <element signature="e#438043#438090#0" expanded="false" />
+                <element signature="e#438112#438366#0" expanded="false" />
                 <element signature="e#438440#438786#0" expanded="false" />
                 <element signature="e#438469#438511#0" expanded="false" />
                 <element signature="e#438524#438783#0" expanded="false" />
@@ -3217,7 +3217,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>celestialBody</find>
       <find>gravi</find>
       <find>height</find>
       <find>part</find>
@@ -3247,6 +3246,7 @@
       <find>fuel</find>
       <find>vesselGet</find>
       <find>SpaceCenter.Resources</find>
+      <find>brak</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -3470,12 +3470,12 @@
       <workItem from="1490077149163" duration="1346000" />
       <workItem from="1491763769016" duration="825000" />
       <workItem from="1499094264612" duration="3223000" />
-      <workItem from="1499264474072" duration="14587000" />
+      <workItem from="1499264474072" duration="15417000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="38323000" />
+    <option name="totallyTimeSpent" value="39153000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -4200,7 +4200,6 @@
             <element signature="e#111772#112004#0" expanded="false" />
             <element signature="e#111801#111871#0" expanded="false" />
             <element signature="e#111884#112001#0" expanded="false" />
-            <element signature="e#112007#112242#0" expanded="false" />
             <element signature="e#112312#112523#0" expanded="false" />
             <element signature="e#112341#112381#0" expanded="false" />
             <element signature="e#112394#112520#0" expanded="false" />
@@ -6346,6 +6345,7 @@
             <element signature="e#437849#438106#0" expanded="false" />
             <element signature="e#437955#438100#0" expanded="false" />
             <element signature="e#438043#438090#0" expanded="false" />
+            <element signature="e#438112#438366#0" expanded="false" />
             <element signature="e#438440#438786#0" expanded="false" />
             <element signature="e#438469#438511#0" expanded="false" />
             <element signature="e#438524#438783#0" expanded="false" />
@@ -7379,7 +7379,6 @@
             <element signature="e#111772#112004#0" expanded="false" />
             <element signature="e#111801#111871#0" expanded="false" />
             <element signature="e#111884#112001#0" expanded="false" />
-            <element signature="e#112007#112242#0" expanded="false" />
             <element signature="e#112312#112523#0" expanded="false" />
             <element signature="e#112341#112381#0" expanded="false" />
             <element signature="e#112394#112520#0" expanded="false" />
@@ -9525,6 +9524,7 @@
             <element signature="e#437849#438106#0" expanded="false" />
             <element signature="e#437955#438100#0" expanded="false" />
             <element signature="e#438043#438090#0" expanded="false" />
+            <element signature="e#438112#438366#0" expanded="false" />
             <element signature="e#438440#438786#0" expanded="false" />
             <element signature="e#438469#438511#0" expanded="false" />
             <element signature="e#438524#438783#0" expanded="false" />
@@ -10038,8 +10038,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/node_modules/krpc-node/lib/services/space-center.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="141">
-          <caret line="12609" column="62" lean-forward="false" selection-start-line="12609" selection-start-column="62" selection-end-line="12609" selection-end-column="62" />
+        <state relative-caret-position="277">
+          <caret line="3201" column="31" lean-forward="false" selection-start-line="3201" selection-start-column="15" selection-end-line="3201" selection-end-column="31" />
           <folding>
             <element signature="e#198#484#0" expanded="false" />
             <element signature="e#487#599#0" expanded="false" />
@@ -10695,7 +10695,6 @@
             <element signature="e#111772#112004#0" expanded="false" />
             <element signature="e#111801#111871#0" expanded="false" />
             <element signature="e#111884#112001#0" expanded="false" />
-            <element signature="e#112007#112242#0" expanded="false" />
             <element signature="e#112312#112523#0" expanded="false" />
             <element signature="e#112341#112381#0" expanded="false" />
             <element signature="e#112394#112520#0" expanded="false" />
@@ -12841,6 +12840,7 @@
             <element signature="e#437849#438106#0" expanded="false" />
             <element signature="e#437955#438100#0" expanded="false" />
             <element signature="e#438043#438090#0" expanded="false" />
+            <element signature="e#438112#438366#0" expanded="false" />
             <element signature="e#438440#438786#0" expanded="false" />
             <element signature="e#438469#438511#0" expanded="false" />
             <element signature="e#438524#438783#0" expanded="false" />
@@ -13209,8 +13209,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/puddle-jumper/1-hover.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="302">
-          <caret line="184" column="32" lean-forward="false" selection-start-line="184" selection-start-column="32" selection-end-line="184" selection-end-column="32" />
+        <state relative-caret-position="310">
+          <caret line="250" column="5" lean-forward="true" selection-start-line="250" selection-start-column="5" selection-end-line="250" selection-end-column="5" />
           <folding />
         </state>
       </provider>

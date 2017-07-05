@@ -236,7 +236,9 @@ let pidOn = false;
     the derivative turns negative and the D module reduces the strength of the action to prevent this overshot.
 */
 let ctr = new Controller(0.05, 0.006, 0.002, 0.05); //Default: 0.25, 0.01, 0.01, 1
-ctr.setTarget(0);
+let targetSpeed = 0;
+let breaksDeployed = false;
+ctr.setTarget(targetSpeed);
 function executeHoverLoop(streamState) {
     updateSpeedSign(streamState);
     if (streamState.altitude < 200 && !pidOn) {
@@ -244,12 +246,24 @@ function executeHoverLoop(streamState) {
     }
     if (streamState.speed > 0 && !pidOn) {
         pidOn = true;
-        client.send(client.services.spaceCenter.controlSetThrottle(state.vessel.controlId, 0));
+        client.send(client.services.spaceCenter.controlSetThrottle(state.vessel.controlId, 0),);
         return;
     }
-
+    if(streamState.speed <= 0 && !breaksDeployed){
+        breaksDeployed = true;
+        client.send(client.services.spaceCenter.controlSetBrakes(state.vessel.controlId, true));
+    }
+    if(streamState.fuel < 320 && targetSpeed === 0){
+        targetSpeed = -20;
+        ctr.setTarget(targetSpeed);
+        client.send(client.services.spaceCenter.controlSetGear(state.vessel.controlId, true));
+    }
+    if(streamState.altitude < 30 && targetSpeed !== -6){
+        targetSpeed = -6;
+        ctr.setTarget(targetSpeed);
+        client.send(client.services.spaceCenter.controlSetGear(state.vessel.controlId, true));
+    }
     let correction = ctr.update(streamState.speed);
-
     client.send(client.services.spaceCenter.controlSetThrottle(state.vessel.controlId, correction));
 }
 
