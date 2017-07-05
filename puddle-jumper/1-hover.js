@@ -14,7 +14,7 @@ let state = {
 };
 let logInterval = {
     period: 'seconds',
-    value: 5
+    value: 1
 };
 let nextLogTimer = null;
 
@@ -134,7 +134,7 @@ function addSurfaceAltitudeToStream(callback) {
 }
 
 function addSpeedToStream(callback){
-    let getSpeed = client.services.spaceCenter.flightGetSpeed(state.vessel.surfaceFlightId);
+    let getSpeed = client.services.spaceCenter.flightGetTrueAirSpeed(state.vessel.surfaceFlightId);
     client.addStream(getSpeed, "Speed", callback);
 }
 
