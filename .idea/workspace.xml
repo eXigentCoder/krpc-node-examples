@@ -26,8 +26,8 @@
       <file leaf-file-name="1-hover.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/puddle-jumper/1-hover.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="276">
-              <caret line="222" column="112" lean-forward="true" selection-start-line="222" selection-start-column="112" selection-end-line="222" selection-end-column="112" />
+            <state relative-caret-position="302">
+              <caret line="184" column="32" lean-forward="false" selection-start-line="184" selection-start-column="32" selection-end-line="184" selection-end-column="32" />
               <folding />
             </state>
           </provider>
@@ -36,8 +36,8 @@
       <file leaf-file-name="space-center.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/node_modules/krpc-node/lib/services/space-center.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="290">
-              <caret line="13793" column="85" lean-forward="false" selection-start-line="13793" selection-start-column="3" selection-end-line="13793" selection-end-column="85" />
+            <state relative-caret-position="141">
+              <caret line="12609" column="62" lean-forward="false" selection-start-line="12609" selection-start-column="62" selection-end-line="12609" selection-end-column="62" />
               <folding>
                 <element signature="e#198#484#0" expanded="false" />
                 <element signature="e#487#599#0" expanded="false" />
@@ -114,6 +114,19 @@
                 <element signature="e#13252#13450#0" expanded="false" />
                 <element signature="e#13281#13319#0" expanded="false" />
                 <element signature="e#13332#13447#0" expanded="false" />
+                <element signature="e#13453#13677#0" expanded="false" />
+                <element signature="e#13728#14026#0" expanded="false" />
+                <element signature="e#13772#14023#0" expanded="false" />
+                <element signature="e#13872#14017#0" expanded="false" />
+                <element signature="e#13960#14007#0" expanded="false" />
+                <element signature="e#14029#14255#0" expanded="false" />
+                <element signature="e#14304#14640#0" expanded="false" />
+                <element signature="e#14348#14637#0" expanded="false" />
+                <element signature="e#14447#14631#0" expanded="false" />
+                <element signature="e#14541#14621#0" expanded="false" />
+                <element signature="e#14643#14862#0" expanded="false" />
+                <element signature="e#14919#15090#0" expanded="false" />
+                <element signature="e#14963#15087#0" expanded="false" />
                 <element signature="e#15093#15309#0" expanded="false" />
                 <element signature="e#15371#15567#0" expanded="false" />
                 <element signature="e#15400#15438#0" expanded="false" />
@@ -454,9 +467,11 @@
                 <element signature="e#70645#70883#0" expanded="false" />
                 <element signature="e#70674#70745#0" expanded="false" />
                 <element signature="e#70758#70880#0" expanded="false" />
+                <element signature="e#70886#71329#0" expanded="false" />
                 <element signature="e#71446#71745#0" expanded="false" />
                 <element signature="e#71475#71592#0" expanded="false" />
                 <element signature="e#71605#71742#0" expanded="false" />
+                <element signature="e#71748#72244#0" expanded="false" />
                 <element signature="e#72361#72660#0" expanded="false" />
                 <element signature="e#72390#72507#0" expanded="false" />
                 <element signature="e#72520#72657#0" expanded="false" />
@@ -531,6 +546,7 @@
                 <element signature="e#84809#84855#0" expanded="false" />
                 <element signature="e#84868#85017#0" expanded="false" />
                 <element signature="e#85023#85335#0" expanded="false" />
+                <element signature="e#85439#85671#0" expanded="false" />
                 <element signature="e#85468#85514#0" expanded="false" />
                 <element signature="e#85527#85668#0" expanded="false" />
                 <element signature="e#85674#85945#0" expanded="false" />
@@ -803,6 +819,7 @@
                 <element signature="e#130553#130767#0" expanded="false" />
                 <element signature="e#130582#130621#0" expanded="false" />
                 <element signature="e#130634#130764#0" expanded="false" />
+                <element signature="e#130770#131172#0" expanded="false" />
                 <element signature="e#131243#131653#0" expanded="false" />
                 <element signature="e#131272#131311#0" expanded="false" />
                 <element signature="e#131324#131650#0" expanded="false" />
@@ -832,6 +849,7 @@
                 <element signature="e#134477#134836#0" expanded="false" />
                 <element signature="e#134585#134830#0" expanded="false" />
                 <element signature="e#134674#134820#0" expanded="false" />
+                <element signature="e#134842#135114#0" expanded="false" />
                 <element signature="e#135187#135598#0" expanded="false" />
                 <element signature="e#135216#135255#0" expanded="false" />
                 <element signature="e#135268#135595#0" expanded="false" />
@@ -849,6 +867,7 @@
                 <element signature="e#137116#137324#0" expanded="false" />
                 <element signature="e#137145#137184#0" expanded="false" />
                 <element signature="e#137197#137321#0" expanded="false" />
+                <element signature="e#137327#137608#0" expanded="false" />
                 <element signature="e#137679#138089#0" expanded="false" />
                 <element signature="e#137708#137747#0" expanded="false" />
                 <element signature="e#137760#138086#0" expanded="false" />
@@ -2803,7 +2822,6 @@
                 <element signature="e#435323#435396#0" expanded="false" />
                 <element signature="e#435409#435531#0" expanded="false" />
                 <element signature="e#435537#435855#0" expanded="false" />
-                <element signature="e#435931#436174#0" expanded="false" />
                 <element signature="e#435960#436033#0" expanded="false" />
                 <element signature="e#436046#436171#0" expanded="false" />
                 <element signature="e#436177#436388#0" expanded="false" />
@@ -2821,7 +2839,6 @@
                 <element signature="e#437849#438106#0" expanded="false" />
                 <element signature="e#437955#438100#0" expanded="false" />
                 <element signature="e#438043#438090#0" expanded="false" />
-                <element signature="e#438112#438366#0" expanded="false" />
                 <element signature="e#438440#438786#0" expanded="false" />
                 <element signature="e#438469#438511#0" expanded="false" />
                 <element signature="e#438524#438783#0" expanded="false" />
@@ -2839,6 +2856,8 @@
                 <element signature="e#440388#440585#0" expanded="false" />
                 <element signature="e#440417#440456#0" expanded="false" />
                 <element signature="e#440469#440582#0" expanded="false" />
+                <element signature="e#440588#441257#0" expanded="false" />
+                <element signature="e#441334#441582#0" expanded="false" />
                 <element signature="e#441363#441443#0" expanded="false" />
                 <element signature="e#441456#441579#0" expanded="false" />
                 <element signature="e#441585#442536#0" expanded="false" />
@@ -2861,6 +2880,8 @@
                 <element signature="e#444908#445053#0" expanded="false" />
                 <element signature="e#445089#445365#0" expanded="false" />
                 <element signature="e#445202#445347#0" expanded="false" />
+                <element signature="e#445401#445816#0" expanded="false" />
+                <element signature="e#445897#446344#0" expanded="false" />
                 <element signature="e#445926#446006#0" expanded="false" />
                 <element signature="e#446019#446341#0" expanded="false" />
                 <element signature="e#446123#446335#0" expanded="false" />
@@ -2930,10 +2951,6 @@
                 <element signature="e#456057#456271#0" expanded="false" />
                 <element signature="e#456086#456125#0" expanded="false" />
                 <element signature="e#456138#456268#0" expanded="false" />
-                <element signature="e#456274#456652#0" expanded="false" />
-                <element signature="e#456725#456939#0" expanded="false" />
-                <element signature="e#456754#456793#0" expanded="false" />
-                <element signature="e#456806#456936#0" expanded="false" />
                 <element signature="e#456942#457305#0" expanded="false" />
                 <element signature="e#457370#457580#0" expanded="false" />
                 <element signature="e#457399#457438#0" expanded="false" />
@@ -3046,6 +3063,7 @@
                 <element signature="e#474533#474678#0" expanded="false" />
                 <element signature="e#474714#474990#0" expanded="false" />
                 <element signature="e#474827#474972#0" expanded="false" />
+                <element signature="e#475026#475853#0" expanded="false" />
                 <element signature="e#475936#476155#0" expanded="false" />
                 <element signature="e#475965#476004#0" expanded="false" />
                 <element signature="e#476017#476152#0" expanded="false" />
@@ -3053,8 +3071,11 @@
                 <element signature="e#477240#477466#0" expanded="false" />
                 <element signature="e#477269#477308#0" expanded="false" />
                 <element signature="e#477321#477463#0" expanded="false" />
+                <element signature="e#477469#478954#0" expanded="false" />
+                <element signature="e#479051#479277#0" expanded="false" />
                 <element signature="e#479080#479119#0" expanded="false" />
                 <element signature="e#479132#479274#0" expanded="false" />
+                <element signature="e#479280#480322#0" expanded="false" />
                 <element signature="e#480435#480669#0" expanded="false" />
                 <element signature="e#480464#480503#0" expanded="false" />
                 <element signature="e#480516#480666#0" expanded="false" />
@@ -3196,15 +3217,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>speed</find>
-      <find>speed = func</find>
-      <find>getVel</find>
-      <find>set</find>
-      <find>autoPilot</find>
-      <find>sas</find>
-      <find>thrust</find>
-      <find>vesselGet</find>
-      <find>gravity</find>
       <find>celestialBody</find>
       <find>gravi</find>
       <find>height</find>
@@ -3224,6 +3236,17 @@
       <find>@result {Long} A long value representing the id for the SpaceCenter.ReferenceFrame</find>
       <find>state.lastAltitude = state.altitude;</find>
       <find>throttle</find>
+      <find>resource</find>
+      <find>re{Long} propellant - A long value representing the id for the SpaceCenter.Propellant</find>
+      <find>res{Long} propellant - A long value representing the id for the SpaceCenter.Propellant</find>
+      <find>resu{Long} propellant - A long value representing the id for the SpaceCenter.Propellant</find>
+      <find>result{Long} propellant - A long value representing the id for the SpaceCenter.Propellant</find>
+      <find>result {Long} propellant - A long value representing the id for the SpaceCenter.Propellant</find>
+      <find>{Long} propellant - A long value representing the id for the SpaceCenter.Propellant</find>
+      <find>Propellant</find>
+      <find>fuel</find>
+      <find>vesselGet</find>
+      <find>SpaceCenter.Resources</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -3447,12 +3470,12 @@
       <workItem from="1490077149163" duration="1346000" />
       <workItem from="1491763769016" duration="825000" />
       <workItem from="1499094264612" duration="3223000" />
-      <workItem from="1499264474072" duration="13407000" />
+      <workItem from="1499264474072" duration="14587000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="37143000" />
+    <option name="totallyTimeSpent" value="38323000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -3501,9 +3524,13 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="115" />
+      <option name="time" value="116" />
     </breakpoint-manager>
-    <watches-manager />
+    <watches-manager>
+      <configuration name="NodeJSConfigurationType">
+        <watch expression="state.vessel.resources.items[0]" />
+      </configuration>
+    </watches-manager>
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/puddle-jumper/1-hover.js">
@@ -3594,6 +3621,19 @@
             <element signature="e#13252#13450#0" expanded="false" />
             <element signature="e#13281#13319#0" expanded="false" />
             <element signature="e#13332#13447#0" expanded="false" />
+            <element signature="e#13453#13677#0" expanded="false" />
+            <element signature="e#13728#14026#0" expanded="false" />
+            <element signature="e#13772#14023#0" expanded="false" />
+            <element signature="e#13872#14017#0" expanded="false" />
+            <element signature="e#13960#14007#0" expanded="false" />
+            <element signature="e#14029#14255#0" expanded="false" />
+            <element signature="e#14304#14640#0" expanded="false" />
+            <element signature="e#14348#14637#0" expanded="false" />
+            <element signature="e#14447#14631#0" expanded="false" />
+            <element signature="e#14541#14621#0" expanded="false" />
+            <element signature="e#14643#14862#0" expanded="false" />
+            <element signature="e#14919#15090#0" expanded="false" />
+            <element signature="e#14963#15087#0" expanded="false" />
             <element signature="e#15093#15309#0" expanded="false" />
             <element signature="e#15371#15567#0" expanded="false" />
             <element signature="e#15400#15438#0" expanded="false" />
@@ -3934,9 +3974,11 @@
             <element signature="e#70645#70883#0" expanded="false" />
             <element signature="e#70674#70745#0" expanded="false" />
             <element signature="e#70758#70880#0" expanded="false" />
+            <element signature="e#70886#71329#0" expanded="false" />
             <element signature="e#71446#71745#0" expanded="false" />
             <element signature="e#71475#71592#0" expanded="false" />
             <element signature="e#71605#71742#0" expanded="false" />
+            <element signature="e#71748#72244#0" expanded="false" />
             <element signature="e#72361#72660#0" expanded="false" />
             <element signature="e#72390#72507#0" expanded="false" />
             <element signature="e#72520#72657#0" expanded="false" />
@@ -4011,6 +4053,7 @@
             <element signature="e#84809#84855#0" expanded="false" />
             <element signature="e#84868#85017#0" expanded="false" />
             <element signature="e#85023#85335#0" expanded="false" />
+            <element signature="e#85439#85671#0" expanded="false" />
             <element signature="e#85468#85514#0" expanded="false" />
             <element signature="e#85527#85668#0" expanded="false" />
             <element signature="e#85674#85945#0" expanded="false" />
@@ -4283,6 +4326,7 @@
             <element signature="e#130553#130767#0" expanded="false" />
             <element signature="e#130582#130621#0" expanded="false" />
             <element signature="e#130634#130764#0" expanded="false" />
+            <element signature="e#130770#131172#0" expanded="false" />
             <element signature="e#131243#131653#0" expanded="false" />
             <element signature="e#131272#131311#0" expanded="false" />
             <element signature="e#131324#131650#0" expanded="false" />
@@ -4312,6 +4356,7 @@
             <element signature="e#134477#134836#0" expanded="false" />
             <element signature="e#134585#134830#0" expanded="false" />
             <element signature="e#134674#134820#0" expanded="false" />
+            <element signature="e#134842#135114#0" expanded="false" />
             <element signature="e#135187#135598#0" expanded="false" />
             <element signature="e#135216#135255#0" expanded="false" />
             <element signature="e#135268#135595#0" expanded="false" />
@@ -4329,6 +4374,7 @@
             <element signature="e#137116#137324#0" expanded="false" />
             <element signature="e#137145#137184#0" expanded="false" />
             <element signature="e#137197#137321#0" expanded="false" />
+            <element signature="e#137327#137608#0" expanded="false" />
             <element signature="e#137679#138089#0" expanded="false" />
             <element signature="e#137708#137747#0" expanded="false" />
             <element signature="e#137760#138086#0" expanded="false" />
@@ -6283,7 +6329,6 @@
             <element signature="e#435323#435396#0" expanded="false" />
             <element signature="e#435409#435531#0" expanded="false" />
             <element signature="e#435537#435855#0" expanded="false" />
-            <element signature="e#435931#436174#0" expanded="false" />
             <element signature="e#435960#436033#0" expanded="false" />
             <element signature="e#436046#436171#0" expanded="false" />
             <element signature="e#436177#436388#0" expanded="false" />
@@ -6301,7 +6346,6 @@
             <element signature="e#437849#438106#0" expanded="false" />
             <element signature="e#437955#438100#0" expanded="false" />
             <element signature="e#438043#438090#0" expanded="false" />
-            <element signature="e#438112#438366#0" expanded="false" />
             <element signature="e#438440#438786#0" expanded="false" />
             <element signature="e#438469#438511#0" expanded="false" />
             <element signature="e#438524#438783#0" expanded="false" />
@@ -6319,6 +6363,8 @@
             <element signature="e#440388#440585#0" expanded="false" />
             <element signature="e#440417#440456#0" expanded="false" />
             <element signature="e#440469#440582#0" expanded="false" />
+            <element signature="e#440588#441257#0" expanded="false" />
+            <element signature="e#441334#441582#0" expanded="false" />
             <element signature="e#441363#441443#0" expanded="false" />
             <element signature="e#441456#441579#0" expanded="false" />
             <element signature="e#441585#442536#0" expanded="false" />
@@ -6341,6 +6387,8 @@
             <element signature="e#444908#445053#0" expanded="false" />
             <element signature="e#445089#445365#0" expanded="false" />
             <element signature="e#445202#445347#0" expanded="false" />
+            <element signature="e#445401#445816#0" expanded="false" />
+            <element signature="e#445897#446344#0" expanded="false" />
             <element signature="e#445926#446006#0" expanded="false" />
             <element signature="e#446019#446341#0" expanded="false" />
             <element signature="e#446123#446335#0" expanded="false" />
@@ -6410,10 +6458,6 @@
             <element signature="e#456057#456271#0" expanded="false" />
             <element signature="e#456086#456125#0" expanded="false" />
             <element signature="e#456138#456268#0" expanded="false" />
-            <element signature="e#456274#456652#0" expanded="false" />
-            <element signature="e#456725#456939#0" expanded="false" />
-            <element signature="e#456754#456793#0" expanded="false" />
-            <element signature="e#456806#456936#0" expanded="false" />
             <element signature="e#456942#457305#0" expanded="false" />
             <element signature="e#457370#457580#0" expanded="false" />
             <element signature="e#457399#457438#0" expanded="false" />
@@ -6526,6 +6570,7 @@
             <element signature="e#474533#474678#0" expanded="false" />
             <element signature="e#474714#474990#0" expanded="false" />
             <element signature="e#474827#474972#0" expanded="false" />
+            <element signature="e#475026#475853#0" expanded="false" />
             <element signature="e#475936#476155#0" expanded="false" />
             <element signature="e#475965#476004#0" expanded="false" />
             <element signature="e#476017#476152#0" expanded="false" />
@@ -6533,8 +6578,11 @@
             <element signature="e#477240#477466#0" expanded="false" />
             <element signature="e#477269#477308#0" expanded="false" />
             <element signature="e#477321#477463#0" expanded="false" />
+            <element signature="e#477469#478954#0" expanded="false" />
+            <element signature="e#479051#479277#0" expanded="false" />
             <element signature="e#479080#479119#0" expanded="false" />
             <element signature="e#479132#479274#0" expanded="false" />
+            <element signature="e#479280#480322#0" expanded="false" />
             <element signature="e#480435#480669#0" expanded="false" />
             <element signature="e#480464#480503#0" expanded="false" />
             <element signature="e#480516#480666#0" expanded="false" />
@@ -6752,6 +6800,19 @@
             <element signature="e#13252#13450#0" expanded="false" />
             <element signature="e#13281#13319#0" expanded="false" />
             <element signature="e#13332#13447#0" expanded="false" />
+            <element signature="e#13453#13677#0" expanded="false" />
+            <element signature="e#13728#14026#0" expanded="false" />
+            <element signature="e#13772#14023#0" expanded="false" />
+            <element signature="e#13872#14017#0" expanded="false" />
+            <element signature="e#13960#14007#0" expanded="false" />
+            <element signature="e#14029#14255#0" expanded="false" />
+            <element signature="e#14304#14640#0" expanded="false" />
+            <element signature="e#14348#14637#0" expanded="false" />
+            <element signature="e#14447#14631#0" expanded="false" />
+            <element signature="e#14541#14621#0" expanded="false" />
+            <element signature="e#14643#14862#0" expanded="false" />
+            <element signature="e#14919#15090#0" expanded="false" />
+            <element signature="e#14963#15087#0" expanded="false" />
             <element signature="e#15093#15309#0" expanded="false" />
             <element signature="e#15371#15567#0" expanded="false" />
             <element signature="e#15400#15438#0" expanded="false" />
@@ -7092,9 +7153,11 @@
             <element signature="e#70645#70883#0" expanded="false" />
             <element signature="e#70674#70745#0" expanded="false" />
             <element signature="e#70758#70880#0" expanded="false" />
+            <element signature="e#70886#71329#0" expanded="false" />
             <element signature="e#71446#71745#0" expanded="false" />
             <element signature="e#71475#71592#0" expanded="false" />
             <element signature="e#71605#71742#0" expanded="false" />
+            <element signature="e#71748#72244#0" expanded="false" />
             <element signature="e#72361#72660#0" expanded="false" />
             <element signature="e#72390#72507#0" expanded="false" />
             <element signature="e#72520#72657#0" expanded="false" />
@@ -7169,6 +7232,7 @@
             <element signature="e#84809#84855#0" expanded="false" />
             <element signature="e#84868#85017#0" expanded="false" />
             <element signature="e#85023#85335#0" expanded="false" />
+            <element signature="e#85439#85671#0" expanded="false" />
             <element signature="e#85468#85514#0" expanded="false" />
             <element signature="e#85527#85668#0" expanded="false" />
             <element signature="e#85674#85945#0" expanded="false" />
@@ -7441,6 +7505,7 @@
             <element signature="e#130553#130767#0" expanded="false" />
             <element signature="e#130582#130621#0" expanded="false" />
             <element signature="e#130634#130764#0" expanded="false" />
+            <element signature="e#130770#131172#0" expanded="false" />
             <element signature="e#131243#131653#0" expanded="false" />
             <element signature="e#131272#131311#0" expanded="false" />
             <element signature="e#131324#131650#0" expanded="false" />
@@ -7470,6 +7535,7 @@
             <element signature="e#134477#134836#0" expanded="false" />
             <element signature="e#134585#134830#0" expanded="false" />
             <element signature="e#134674#134820#0" expanded="false" />
+            <element signature="e#134842#135114#0" expanded="false" />
             <element signature="e#135187#135598#0" expanded="false" />
             <element signature="e#135216#135255#0" expanded="false" />
             <element signature="e#135268#135595#0" expanded="false" />
@@ -7487,6 +7553,7 @@
             <element signature="e#137116#137324#0" expanded="false" />
             <element signature="e#137145#137184#0" expanded="false" />
             <element signature="e#137197#137321#0" expanded="false" />
+            <element signature="e#137327#137608#0" expanded="false" />
             <element signature="e#137679#138089#0" expanded="false" />
             <element signature="e#137708#137747#0" expanded="false" />
             <element signature="e#137760#138086#0" expanded="false" />
@@ -9441,7 +9508,6 @@
             <element signature="e#435323#435396#0" expanded="false" />
             <element signature="e#435409#435531#0" expanded="false" />
             <element signature="e#435537#435855#0" expanded="false" />
-            <element signature="e#435931#436174#0" expanded="false" />
             <element signature="e#435960#436033#0" expanded="false" />
             <element signature="e#436046#436171#0" expanded="false" />
             <element signature="e#436177#436388#0" expanded="false" />
@@ -9459,7 +9525,6 @@
             <element signature="e#437849#438106#0" expanded="false" />
             <element signature="e#437955#438100#0" expanded="false" />
             <element signature="e#438043#438090#0" expanded="false" />
-            <element signature="e#438112#438366#0" expanded="false" />
             <element signature="e#438440#438786#0" expanded="false" />
             <element signature="e#438469#438511#0" expanded="false" />
             <element signature="e#438524#438783#0" expanded="false" />
@@ -9477,6 +9542,8 @@
             <element signature="e#440388#440585#0" expanded="false" />
             <element signature="e#440417#440456#0" expanded="false" />
             <element signature="e#440469#440582#0" expanded="false" />
+            <element signature="e#440588#441257#0" expanded="false" />
+            <element signature="e#441334#441582#0" expanded="false" />
             <element signature="e#441363#441443#0" expanded="false" />
             <element signature="e#441456#441579#0" expanded="false" />
             <element signature="e#441585#442536#0" expanded="false" />
@@ -9499,6 +9566,8 @@
             <element signature="e#444908#445053#0" expanded="false" />
             <element signature="e#445089#445365#0" expanded="false" />
             <element signature="e#445202#445347#0" expanded="false" />
+            <element signature="e#445401#445816#0" expanded="false" />
+            <element signature="e#445897#446344#0" expanded="false" />
             <element signature="e#445926#446006#0" expanded="false" />
             <element signature="e#446019#446341#0" expanded="false" />
             <element signature="e#446123#446335#0" expanded="false" />
@@ -9568,10 +9637,6 @@
             <element signature="e#456057#456271#0" expanded="false" />
             <element signature="e#456086#456125#0" expanded="false" />
             <element signature="e#456138#456268#0" expanded="false" />
-            <element signature="e#456274#456652#0" expanded="false" />
-            <element signature="e#456725#456939#0" expanded="false" />
-            <element signature="e#456754#456793#0" expanded="false" />
-            <element signature="e#456806#456936#0" expanded="false" />
             <element signature="e#456942#457305#0" expanded="false" />
             <element signature="e#457370#457580#0" expanded="false" />
             <element signature="e#457399#457438#0" expanded="false" />
@@ -9684,6 +9749,7 @@
             <element signature="e#474533#474678#0" expanded="false" />
             <element signature="e#474714#474990#0" expanded="false" />
             <element signature="e#474827#474972#0" expanded="false" />
+            <element signature="e#475026#475853#0" expanded="false" />
             <element signature="e#475936#476155#0" expanded="false" />
             <element signature="e#475965#476004#0" expanded="false" />
             <element signature="e#476017#476152#0" expanded="false" />
@@ -9691,8 +9757,11 @@
             <element signature="e#477240#477466#0" expanded="false" />
             <element signature="e#477269#477308#0" expanded="false" />
             <element signature="e#477321#477463#0" expanded="false" />
+            <element signature="e#477469#478954#0" expanded="false" />
+            <element signature="e#479051#479277#0" expanded="false" />
             <element signature="e#479080#479119#0" expanded="false" />
             <element signature="e#479132#479274#0" expanded="false" />
+            <element signature="e#479280#480322#0" expanded="false" />
             <element signature="e#480435#480669#0" expanded="false" />
             <element signature="e#480464#480503#0" expanded="false" />
             <element signature="e#480516#480666#0" expanded="false" />
@@ -9969,8 +10038,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/node_modules/krpc-node/lib/services/space-center.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="290">
-          <caret line="13793" column="85" lean-forward="false" selection-start-line="13793" selection-start-column="3" selection-end-line="13793" selection-end-column="85" />
+        <state relative-caret-position="141">
+          <caret line="12609" column="62" lean-forward="false" selection-start-line="12609" selection-start-column="62" selection-end-line="12609" selection-end-column="62" />
           <folding>
             <element signature="e#198#484#0" expanded="false" />
             <element signature="e#487#599#0" expanded="false" />
@@ -10047,6 +10116,19 @@
             <element signature="e#13252#13450#0" expanded="false" />
             <element signature="e#13281#13319#0" expanded="false" />
             <element signature="e#13332#13447#0" expanded="false" />
+            <element signature="e#13453#13677#0" expanded="false" />
+            <element signature="e#13728#14026#0" expanded="false" />
+            <element signature="e#13772#14023#0" expanded="false" />
+            <element signature="e#13872#14017#0" expanded="false" />
+            <element signature="e#13960#14007#0" expanded="false" />
+            <element signature="e#14029#14255#0" expanded="false" />
+            <element signature="e#14304#14640#0" expanded="false" />
+            <element signature="e#14348#14637#0" expanded="false" />
+            <element signature="e#14447#14631#0" expanded="false" />
+            <element signature="e#14541#14621#0" expanded="false" />
+            <element signature="e#14643#14862#0" expanded="false" />
+            <element signature="e#14919#15090#0" expanded="false" />
+            <element signature="e#14963#15087#0" expanded="false" />
             <element signature="e#15093#15309#0" expanded="false" />
             <element signature="e#15371#15567#0" expanded="false" />
             <element signature="e#15400#15438#0" expanded="false" />
@@ -10387,9 +10469,11 @@
             <element signature="e#70645#70883#0" expanded="false" />
             <element signature="e#70674#70745#0" expanded="false" />
             <element signature="e#70758#70880#0" expanded="false" />
+            <element signature="e#70886#71329#0" expanded="false" />
             <element signature="e#71446#71745#0" expanded="false" />
             <element signature="e#71475#71592#0" expanded="false" />
             <element signature="e#71605#71742#0" expanded="false" />
+            <element signature="e#71748#72244#0" expanded="false" />
             <element signature="e#72361#72660#0" expanded="false" />
             <element signature="e#72390#72507#0" expanded="false" />
             <element signature="e#72520#72657#0" expanded="false" />
@@ -10464,6 +10548,7 @@
             <element signature="e#84809#84855#0" expanded="false" />
             <element signature="e#84868#85017#0" expanded="false" />
             <element signature="e#85023#85335#0" expanded="false" />
+            <element signature="e#85439#85671#0" expanded="false" />
             <element signature="e#85468#85514#0" expanded="false" />
             <element signature="e#85527#85668#0" expanded="false" />
             <element signature="e#85674#85945#0" expanded="false" />
@@ -10736,6 +10821,7 @@
             <element signature="e#130553#130767#0" expanded="false" />
             <element signature="e#130582#130621#0" expanded="false" />
             <element signature="e#130634#130764#0" expanded="false" />
+            <element signature="e#130770#131172#0" expanded="false" />
             <element signature="e#131243#131653#0" expanded="false" />
             <element signature="e#131272#131311#0" expanded="false" />
             <element signature="e#131324#131650#0" expanded="false" />
@@ -10765,6 +10851,7 @@
             <element signature="e#134477#134836#0" expanded="false" />
             <element signature="e#134585#134830#0" expanded="false" />
             <element signature="e#134674#134820#0" expanded="false" />
+            <element signature="e#134842#135114#0" expanded="false" />
             <element signature="e#135187#135598#0" expanded="false" />
             <element signature="e#135216#135255#0" expanded="false" />
             <element signature="e#135268#135595#0" expanded="false" />
@@ -10782,6 +10869,7 @@
             <element signature="e#137116#137324#0" expanded="false" />
             <element signature="e#137145#137184#0" expanded="false" />
             <element signature="e#137197#137321#0" expanded="false" />
+            <element signature="e#137327#137608#0" expanded="false" />
             <element signature="e#137679#138089#0" expanded="false" />
             <element signature="e#137708#137747#0" expanded="false" />
             <element signature="e#137760#138086#0" expanded="false" />
@@ -12736,7 +12824,6 @@
             <element signature="e#435323#435396#0" expanded="false" />
             <element signature="e#435409#435531#0" expanded="false" />
             <element signature="e#435537#435855#0" expanded="false" />
-            <element signature="e#435931#436174#0" expanded="false" />
             <element signature="e#435960#436033#0" expanded="false" />
             <element signature="e#436046#436171#0" expanded="false" />
             <element signature="e#436177#436388#0" expanded="false" />
@@ -12754,7 +12841,6 @@
             <element signature="e#437849#438106#0" expanded="false" />
             <element signature="e#437955#438100#0" expanded="false" />
             <element signature="e#438043#438090#0" expanded="false" />
-            <element signature="e#438112#438366#0" expanded="false" />
             <element signature="e#438440#438786#0" expanded="false" />
             <element signature="e#438469#438511#0" expanded="false" />
             <element signature="e#438524#438783#0" expanded="false" />
@@ -12772,6 +12858,8 @@
             <element signature="e#440388#440585#0" expanded="false" />
             <element signature="e#440417#440456#0" expanded="false" />
             <element signature="e#440469#440582#0" expanded="false" />
+            <element signature="e#440588#441257#0" expanded="false" />
+            <element signature="e#441334#441582#0" expanded="false" />
             <element signature="e#441363#441443#0" expanded="false" />
             <element signature="e#441456#441579#0" expanded="false" />
             <element signature="e#441585#442536#0" expanded="false" />
@@ -12794,6 +12882,8 @@
             <element signature="e#444908#445053#0" expanded="false" />
             <element signature="e#445089#445365#0" expanded="false" />
             <element signature="e#445202#445347#0" expanded="false" />
+            <element signature="e#445401#445816#0" expanded="false" />
+            <element signature="e#445897#446344#0" expanded="false" />
             <element signature="e#445926#446006#0" expanded="false" />
             <element signature="e#446019#446341#0" expanded="false" />
             <element signature="e#446123#446335#0" expanded="false" />
@@ -12863,10 +12953,6 @@
             <element signature="e#456057#456271#0" expanded="false" />
             <element signature="e#456086#456125#0" expanded="false" />
             <element signature="e#456138#456268#0" expanded="false" />
-            <element signature="e#456274#456652#0" expanded="false" />
-            <element signature="e#456725#456939#0" expanded="false" />
-            <element signature="e#456754#456793#0" expanded="false" />
-            <element signature="e#456806#456936#0" expanded="false" />
             <element signature="e#456942#457305#0" expanded="false" />
             <element signature="e#457370#457580#0" expanded="false" />
             <element signature="e#457399#457438#0" expanded="false" />
@@ -12979,6 +13065,7 @@
             <element signature="e#474533#474678#0" expanded="false" />
             <element signature="e#474714#474990#0" expanded="false" />
             <element signature="e#474827#474972#0" expanded="false" />
+            <element signature="e#475026#475853#0" expanded="false" />
             <element signature="e#475936#476155#0" expanded="false" />
             <element signature="e#475965#476004#0" expanded="false" />
             <element signature="e#476017#476152#0" expanded="false" />
@@ -12986,8 +13073,11 @@
             <element signature="e#477240#477466#0" expanded="false" />
             <element signature="e#477269#477308#0" expanded="false" />
             <element signature="e#477321#477463#0" expanded="false" />
+            <element signature="e#477469#478954#0" expanded="false" />
+            <element signature="e#479051#479277#0" expanded="false" />
             <element signature="e#479080#479119#0" expanded="false" />
             <element signature="e#479132#479274#0" expanded="false" />
+            <element signature="e#479280#480322#0" expanded="false" />
             <element signature="e#480435#480669#0" expanded="false" />
             <element signature="e#480464#480503#0" expanded="false" />
             <element signature="e#480516#480666#0" expanded="false" />
@@ -13119,8 +13209,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/puddle-jumper/1-hover.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="276">
-          <caret line="222" column="112" lean-forward="true" selection-start-line="222" selection-start-column="112" selection-end-line="222" selection-end-column="112" />
+        <state relative-caret-position="302">
+          <caret line="184" column="32" lean-forward="false" selection-start-line="184" selection-start-column="32" selection-end-line="184" selection-end-column="32" />
           <folding />
         </state>
       </provider>
