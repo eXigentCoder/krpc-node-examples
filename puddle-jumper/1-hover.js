@@ -25,24 +25,29 @@ function clientCreated(err, createdClient) {
         throw err;
     }
     client = createdClient;
-    async.series([
-        getClientIdAndActiveVessel,
-        connectToStreamServer,
-        getVesselControl,
-        getVesselGetSurfaceReferenceFrame,
-        getVesselFlight,
-        addPitchToStream,
-        addRollToStream,
-        addHeadingToStream,
-        addSurfaceAltitudeToStream,
-        addSpeedToStream
-    ], function (err) {
-        if (err) {
-            throw err;
+    async.series(
+        [
+            getClientIdAndActiveVessel,
+            connectToStreamServer,
+            getVesselInfo,
+            getVesselFlight,
+            addPitchToStream,
+            addRollToStream,
+            addHeadingToStream,
+            addSurfaceAltitudeToStream,
+            addSpeedToStream,
+            addThrottleToStream,
+            turnSasOn,
+            turnRcsOn
+        ],
+        function(err) {
+            if (err) {
+                throw err;
+            }
+            client.stream.on('message', streamUpdate);
+            incrementNextLogTimer();
         }
-        client.stream.on('message', streamUpdate);
-        incrementNextLogTimer();
-    });
+    );
 }
 
 function getFirstResult(response) {
@@ -61,11 +66,8 @@ function getResultN(response, n) {
 }
 
 function getClientIdAndActiveVessel(callback) {
-    let calls = [
-        client.services.krpc.getClientId(),
-        client.services.spaceCenter.getActiveVessel()
-    ];
-    client.send(calls, function (err, response) {
+    let calls = [client.services.krpc.getClientId(), client.services.spaceCenter.getActiveVessel()];
+    client.send(calls, function(err, response) {
         if (err) {
             return callback(err);
         }
@@ -78,64 +80,71 @@ function getClientIdAndActiveVessel(callback) {
 }
 
 function connectToStreamServer(callback) {
-    client.connectToStreamServer(state.clientId, function (err) {
+    client.connectToStreamServer(state.clientId, function(err) {
         return callback(err);
     });
 }
 
-function getVesselControl(callback) {
-    client.send(client.services.spaceCenter.vesselGetControl(state.vessel.id), function (err, response) {
+function getVesselInfo(callback) {
+    let calls = [
+        client.services.spaceCenter.vesselGetControl(state.vessel.id),
+        client.services.spaceCenter.vesselGetSurfaceReferenceFrame(state.vessel.id),
+        client.services.spaceCenter.vesselGetAutoPilot(state.vessel.id)
+    ];
+    client.send(calls, function(err, response) {
         if (err) {
             return callback(err);
         }
         state.vessel.controlId = getFirstResult(response);
-        return callback();
-    });
-}
-
-function getVesselGetSurfaceReferenceFrame(callback) {
-    client.send(client.services.spaceCenter.vesselGetSurfaceReferenceFrame(state.vessel.id), function (err, response) {
-        if (err) {
-            return callback(err);
-        }
-        state.vessel.surfaceReference = getFirstResult(response);
+        state.vessel.surfaceReference = getResultN(response, 1);
+        state.vessel.autoPilot = getResultN(response, 2);
         return callback();
     });
 }
 
 function getVesselFlight(callback) {
-    client.send(client.services.spaceCenter.vesselFlight(state.vessel.id, state.vessel.surfaceReference), function (err, response) {
-        if (err) {
-            return callback(err);
+    client.send(
+        client.services.spaceCenter.vesselFlight(state.vessel.id, state.vessel.surfaceReference),
+        function(err, response) {
+            if (err) {
+                return callback(err);
+            }
+            state.vessel.surfaceFlightId = getFirstResult(response);
+            return callback();
         }
-        state.vessel.surfaceFlightId = getFirstResult(response);
-        return callback();
-    });
+    );
 }
 
 function addPitchToStream(callback) {
     let getThrottle = client.services.spaceCenter.flightGetPitch(state.vessel.surfaceFlightId);
-    client.addStream(getThrottle, "Pitch", callback);
+    client.addStream(getThrottle, 'pitch', callback);
 }
 
 function addRollToStream(callback) {
     let getThrottle = client.services.spaceCenter.flightGetRoll(state.vessel.surfaceFlightId);
-    client.addStream(getThrottle, "Roll", callback);
+    client.addStream(getThrottle, 'roll', callback);
 }
 
 function addHeadingToStream(callback) {
     let getHeading = client.services.spaceCenter.flightGetHeading(state.vessel.surfaceFlightId);
-    client.addStream(getHeading, "Heading", callback);
+    client.addStream(getHeading, 'heading', callback);
 }
 
 function addSurfaceAltitudeToStream(callback) {
-    let getThrottle = client.services.spaceCenter.flightGetSurfaceAltitude(state.vessel.surfaceFlightId);
-    client.addStream(getThrottle, "Altitude", callback);
+    let getThrottle = client.services.spaceCenter.flightGetSurfaceAltitude(
+        state.vessel.surfaceFlightId
+    );
+    client.addStream(getThrottle, 'altitude', callback);
 }
 
-function addSpeedToStream(callback){
+function addSpeedToStream(callback) {
     let getSpeed = client.services.spaceCenter.flightGetTrueAirSpeed(state.vessel.surfaceFlightId);
-    client.addStream(getSpeed, "Speed", callback);
+    client.addStream(getSpeed, 'speed', callback);
+}
+
+function addThrottleToStream(callback) {
+    let getSpeed = client.services.spaceCenter.controlGetThrottle(state.vessel.controlId);
+    client.addStream(getSpeed, 'throttle', callback);
 }
 
 function streamUpdate(streamState) {
@@ -147,4 +156,14 @@ function streamUpdate(streamState) {
 
 function incrementNextLogTimer() {
     nextLogTimer = moment.utc().add(logInterval.value, logInterval.period);
+}
+
+function turnSasOn(callback) {
+    let getSpeed = client.services.spaceCenter.controlSetSas(state.vessel.controlId, true);
+    client.send(getSpeed, callback);
+}
+
+function turnRcsOn(callback) {
+    let getSpeed = client.services.spaceCenter.controlSetRcs(state.vessel.controlId, true);
+    client.send(getSpeed, callback);
 }
