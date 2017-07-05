@@ -13,7 +13,9 @@ let state = {
         surfaceReference: null,
         surfaceFlightId: null
     },
-    lastAltitude: 0
+    lastAltitude: 0,
+    landed: false,
+    shutdownInitiated: false
 };
 let logInterval = {
     period: 'seconds',
@@ -187,7 +189,11 @@ function addResourcesToStream(callback) {
 }
 
 function streamUpdate(streamState) {
-    executeHoverLoop(streamState);
+    if (!state.landed) {
+        executeHoverLoop(streamState);
+    } else {
+        shutdownProcedure(streamState);
+    }
     logStreamStateIfRequired(streamState);
 }
 
@@ -276,6 +282,11 @@ function executeHoverLoop(streamState) {
         client.send(client.services.spaceCenter.controlSetGear(state.vessel.controlId, true));
     }
     let correction = ctr.update(streamState.speed);
+
+    if (streamState.altitude < 5) {
+        state.landed = true;
+        correction = 0;
+    }
     client.send(client.services.spaceCenter.controlSetThrottle(state.vessel.controlId, correction));
 }
 
@@ -286,4 +297,19 @@ function updateSpeedSign(streamState) {
         streamState.speed = -1 * streamState.speed;
     }
     state.lastAltitude = streamState.altitude;
+}
+
+function shutdownProcedure(streamState) {
+    if (!state.shutdownInitiated) {
+        state.shutdownInitiated = true;
+        setTimeout(function() {
+            client.send([
+                client.services.spaceCenter.controlSetBrakes(state.vessel.controlId, false),
+                client.services.spaceCenter.controlSetGear(state.vessel.controlId, false),
+                client.services.spaceCenter.autoPilotEngage(state.vessel.autoPilot),
+                client.services.spaceCenter.autoPilotTargetPitchAndHeading(state.vessel.autoPilot, 2, 270),
+                client.services.spaceCenter.controlSetThrottle(state.vessel.controlId, 1)
+            ]);
+        }, 3000);
+    }
 }
