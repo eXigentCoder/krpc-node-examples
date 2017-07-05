@@ -2,6 +2,7 @@
 const async = require('async');
 const Client = require('krpc-node');
 const moment = require('moment');
+let Controller = require('node-pid-controller');
 
 let client = null;
 let state = {
@@ -208,67 +209,43 @@ function launch(callback) {
     client.send(call, callback);
 }
 
+let pidOn = false;
+
+// k_p, k_i, k_d, dt (see https://www.npmjs.com/package/node-pid-controller)
 /*
- Equation:
- F (force) = m (mass) * a (acceleration)
- The force (F) or engine thrust required to hover should equal the mass of the vessel (m) * the acceleration exerted upon it from gravity (a)
- */
-let hasReachedTargetAltitude = false;
-let hasGotBackToZero = false;
+ https://en.wikipedia.org/wiki/PID_controller
+ P accounts for present values of the error. For example, if the error is large and positive,
+    the control output will also be large and positive.
+ I accounts for past values of the error. For example, if the current output is not sufficiently strong,
+    the integral of the error will accumulate over time, and the controller will respond by applying a stronger action.
+ D accounts for possible future trends of the error, based on its current rate of change.[2].
+    For example, continuing the P example above, when the large positive control output succeeds in bringing the error
+    closer to zero, it also puts the process on a path to large negative error in the near future; in this case,
+    the derivative turns negative and the D module reduces the strength of the action to prevent this overshot.
+*/
+let ctr = new Controller(0.05, 0.006, 0.002, 0.05); //Default: 0.25, 0.01, 0.01, 1
+ctr.setTarget(0);
 function executeHoverLoop(streamState) {
+    updateSpeedSign(streamState);
+    if (streamState.altitude < 200 && !pidOn) {
+        return;
+    }
+    if (streamState.speed > 0 && !pidOn) {
+        pidOn = true;
+        client.send(client.services.spaceCenter.controlSetThrottle(state.vessel.controlId, 0));
+        return;
+    }
+
+    let correction = ctr.update(streamState.speed);
+
+    client.send(client.services.spaceCenter.controlSetThrottle(state.vessel.controlId, correction));
+}
+
+function updateSpeedSign(streamState){
     streamState.lastAltitude = state.lastAltitude;
     //temp fix for velocities not being returned, need to know if we falling or ascending.
     if (state.lastAltitude > streamState.altitude) {
         streamState.speed = -1 * streamState.speed;
     }
     state.lastAltitude = streamState.altitude;
-    if (streamState.altitude < 200) {
-        return;
-    }
-    if (streamState.speed > 0 && !hasReachedTargetAltitude) {
-        hasReachedTargetAltitude = true;
-        client.send(client.services.spaceCenter.controlSetThrottle(state.vessel.controlId, 0));
-        return;
-    }
-    if (streamState.speed > 0 && !hasGotBackToZero) {
-        return;
-    }
-    hasGotBackToZero = true;
-    let idealThrottleValue = 0;
-    if (streamState.speed < 0) {
-        //https://www.mansfieldct.org/Schools/MMS/staff/hand/lawsgravaltitude.htm
-        const gravityAtThisAltitude =
-            state.surfaceGravity /
-            ((state.equatorialRadius + streamState.altitude) / state.equatorialRadius);
-        const forceNeededToCancelGravity = streamState.mass * gravityAtThisAltitude;
-        const forceNeededToCancelSpeed = streamState.mass * Math.abs(streamState.speed);
-        const forceNeeded = forceNeededToCancelGravity + forceNeededToCancelSpeed;
-        idealThrottleValue = streamState.maxThrust / forceNeeded;
-        if (idealThrottleValue > 1) {
-            idealThrottleValue = 1;
-        }
-        if (idealThrottleValue <= 0) {
-            return;
-        }
-    }
-
-    console.log(idealThrottleValue);
-    const newThrottleValue = smoothThrottle(idealThrottleValue, streamState.throttle);
-    client.send(
-        client.services.spaceCenter.controlSetThrottle(state.vessel.controlId, newThrottleValue)
-    );
-}
-
-function smoothThrottle(idealThrottleValue, currentThrottle) {
-    if (idealThrottleValue > currentThrottle) {
-        return speedUp(idealThrottleValue, currentThrottle);
-    }
-    return slowDown(idealThrottleValue, currentThrottle);
-}
-function speedUp(idealThrottleValue, currentThrottle) {
-    return currentThrottle + 0.1;
-}
-
-function slowDown(idealThrottleValue, currentThrottle) {
-    return currentThrottle - 0.1;
 }

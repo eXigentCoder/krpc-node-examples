@@ -30,6 +30,7 @@
     "async": "2.3.0",
     "krpc-node": "2.0.1",
     "lodash": "4.17.4",
-    "moment": "2.18.1"
+    "moment": "2.18.1",
+    "node-pid-controller": "1.0.0"
   }
 }
