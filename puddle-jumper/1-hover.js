@@ -33,7 +33,7 @@ function clientCreated(err, createdClient) {
     client = createdClient;
     async.series(
         [
-            getInitalInfo,
+            getInitialInfo,
             connectToStreamServer,
             getVesselInfo,
             getVesselFlight,
@@ -73,7 +73,7 @@ function getResultN(response, n) {
     return result.value;
 }
 
-function getInitalInfo(callback) {
+function getInitialInfo(callback) {
     let calls = [
         client.services.krpc.getClientId(),
         client.services.spaceCenter.getActiveVessel(),
