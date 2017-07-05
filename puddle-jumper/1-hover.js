@@ -213,42 +213,62 @@ function launch(callback) {
  F (force) = m (mass) * a (acceleration)
  The force (F) or engine thrust required to hover should equal the mass of the vessel (m) * the acceleration exerted upon it from gravity (a)
  */
+let hasReachedTargetAltitude = false;
+let hasGotBackToZero = false;
 function executeHoverLoop(streamState) {
+    streamState.lastAltitude = state.lastAltitude;
+    //temp fix for velocities not being returned, need to know if we falling or ascending.
     if (state.lastAltitude > streamState.altitude) {
         streamState.speed = -1 * streamState.speed;
     }
-    streamState.lastAltitude = state.lastAltitude;
+    state.lastAltitude = streamState.altitude;
     if (streamState.altitude < 200) {
-        state.lastAltitude = streamState.altitude;
         return;
     }
-    if (streamState.speed > 0) {
-        if (streamState.throttle > 0) {
-            client.send(client.services.spaceCenter.controlSetThrottle(state.vessel.controlId, 0));
-        }
-        state.lastAltitude = streamState.altitude;
+    if (streamState.speed > 0 && !hasReachedTargetAltitude) {
+        hasReachedTargetAltitude = true;
+        client.send(client.services.spaceCenter.controlSetThrottle(state.vessel.controlId, 0));
         return;
     }
-    //https://www.mansfieldct.org/Schools/MMS/staff/hand/lawsgravaltitude.htm
-    const gravityAtThisAltitude =
-        state.surfaceGravity /
-        ((state.equatorialRadius + streamState.altitude) / state.equatorialRadius);
-    const forceNeededToCancelGravity = streamState.mass * gravityAtThisAltitude;
-    let forceNeededToCancelSpeed = 0;
+    if (streamState.speed > 0 && !hasGotBackToZero) {
+        return;
+    }
+    hasGotBackToZero = true;
+    let idealThrottleValue = 0;
     if (streamState.speed < 0) {
-        //we are falling, so canceling out gravity alone isn't enough
-        forceNeededToCancelSpeed = streamState.mass * Math.abs(streamState.speed);
+        //https://www.mansfieldct.org/Schools/MMS/staff/hand/lawsgravaltitude.htm
+        const gravityAtThisAltitude =
+            state.surfaceGravity /
+            ((state.equatorialRadius + streamState.altitude) / state.equatorialRadius);
+        const forceNeededToCancelGravity = streamState.mass * gravityAtThisAltitude;
+        const forceNeededToCancelSpeed = streamState.mass * Math.abs(streamState.speed);
+        const forceNeeded = forceNeededToCancelGravity + forceNeededToCancelSpeed;
+        idealThrottleValue = streamState.maxThrust / forceNeeded;
+        if (idealThrottleValue > 1) {
+            idealThrottleValue = 1;
+        }
+        if (idealThrottleValue <= 0) {
+            return;
+        }
     }
-    const forceNeeded = forceNeededToCancelGravity + forceNeededToCancelSpeed;
-    let newThrottleValue = streamState.maxThrust / forceNeeded;
-    if (newThrottleValue > 1) {
-        newThrottleValue = 1;
-    }
-    if (newThrottleValue <= 0) {
-        state.lastAltitude = streamState.altitude;
-        return;
-    }
+
+    console.log(idealThrottleValue);
+    const newThrottleValue = smoothThrottle(idealThrottleValue, streamState.throttle);
     client.send(
         client.services.spaceCenter.controlSetThrottle(state.vessel.controlId, newThrottleValue)
     );
+}
+
+function smoothThrottle(idealThrottleValue, currentThrottle) {
+    if (idealThrottleValue > currentThrottle) {
+        return speedUp(idealThrottleValue, currentThrottle);
+    }
+    return slowDown(idealThrottleValue, currentThrottle);
+}
+function speedUp(idealThrottleValue, currentThrottle) {
+    return currentThrottle + 0.1;
+}
+
+function slowDown(idealThrottleValue, currentThrottle) {
+    return currentThrottle - 0.1;
 }

@@ -26,8 +26,8 @@
       <file leaf-file-name="1-hover.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/puddle-jumper/1-hover.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="453">
-              <caret line="235" column="67" lean-forward="true" selection-start-line="235" selection-start-column="67" selection-end-line="235" selection-end-column="67" />
+            <state relative-caret-position="-97">
+              <caret line="248" column="9" lean-forward="true" selection-start-line="248" selection-start-column="9" selection-end-line="248" selection-end-column="9" />
               <folding />
             </state>
           </provider>
@@ -3200,7 +3200,6 @@
       <find>speed = func</find>
       <find>getVel</find>
       <find>set</find>
-      <find>throttle</find>
       <find>autoPilot</find>
       <find>sas</find>
       <find>thrust</find>
@@ -3223,6 +3222,8 @@
       <find>velocity</find>
       <find>angularVel</find>
       <find>@result {Long} A long value representing the id for the SpaceCenter.ReferenceFrame</find>
+      <find>state.lastAltitude = state.altitude;</find>
+      <find>throttle</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -3446,12 +3447,12 @@
       <workItem from="1490077149163" duration="1346000" />
       <workItem from="1491763769016" duration="825000" />
       <workItem from="1499094264612" duration="3223000" />
-      <workItem from="1499264474072" duration="8636000" />
+      <workItem from="1499264474072" duration="9718000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="32372000" />
+    <option name="totallyTimeSpent" value="33454000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -3471,7 +3472,7 @@
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.45937163" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.45937163" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32936078" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.17281349" sideWeight="0.503792" order="2" side_tool="true" content_ui="tabs" />
@@ -13118,8 +13119,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/puddle-jumper/1-hover.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="453">
-          <caret line="235" column="67" lean-forward="true" selection-start-line="235" selection-start-column="67" selection-end-line="235" selection-end-column="67" />
+        <state relative-caret-position="-97">
+          <caret line="248" column="9" lean-forward="true" selection-start-line="248" selection-start-column="9" selection-end-line="248" selection-end-column="9" />
           <folding />
         </state>
       </provider>
