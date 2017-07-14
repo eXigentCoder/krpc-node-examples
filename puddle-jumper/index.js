@@ -308,7 +308,7 @@ function shutdownProcedure(streamState){
             client.send([
                 client.services.spaceCenter.controlSetGear(state.vessel.controlId, false),
                 client.services.spaceCenter.autoPilotEngage(state.vessel.autoPilot),
-                client.services.spaceCenter.autoPilotTargetPitchAndHeading(state.vessel.autoPilot, 3, 270),
+                client.services.spaceCenter.autoPilotTargetPitchAndHeading(state.vessel.autoPilot, 4, 270),
                 client.services.spaceCenter.controlSetThrottle(state.vessel.controlId, 1)
             ]);
             setTimeout(function (){
