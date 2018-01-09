@@ -2,7 +2,7 @@
   "name": "krpc-node-examples",
   "version": "0.0.1",
   "description": "Examples of how to use the krpc-node project. See https://github.com/eXigentCoder/krpc-node.",
-  "main": "example-01-tbd.js",
+  "main": "./puddle-jumper/index.js",
   "scripts": {
     "test": "mocha"
   },
