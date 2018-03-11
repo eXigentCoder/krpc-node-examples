@@ -9,7 +9,7 @@
   "scripts": {
     "test": "mocha",
     "lint": "npm run lint-ci -- --fix",
-    "lint-ci": "eslint \"lib/**/*.js\" \"test/**/*.js\" \"utilities/**/*.js\"",
+    "lint-ci": "eslint \"src/**/*.js\" \"test/**/*.js\" \"utilities/**/*.js\"",
     "prettier": "prettier --write --tab-width=4 --single-quote=true --print-width=100 \"{src,test,utilities}/**/*.js\""
   },
   "repository": {
