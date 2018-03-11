@@ -33,17 +33,17 @@
   },
   "homepage": "https://github.com/eXigentCoder/krpc-node-examples#readme",
   "dependencies": {
-    "async": "^2.6.0",
-    "krpc-node": "^4.0.0",
-    "lodash": "^4.17.5",
-    "moment": "^2.21.0",
+    "async": "2.6.0",
+    "krpc-node": "4.0.1",
+    "lodash": "4.17.5",
+    "moment": "2.21.0",
     "node-pid-controller": "1.0.0"
   },
   "devDependencies": {
-    "eslint": "^4.18.2",
-    "eslint-config-prettier": "^2.9.0",
-    "eslint-plugin-node": "^6.0.1",
-    "eslint-plugin-prettier": "^2.6.0",
-    "prettier": "^1.11.1"
+    "eslint": "4.18.2",
+    "eslint-config-prettier": "2.9.0",
+    "eslint-plugin-node": "6.0.1",
+    "eslint-plugin-prettier": "2.6.0",
+    "prettier": "1.11.1"
   }
 }
