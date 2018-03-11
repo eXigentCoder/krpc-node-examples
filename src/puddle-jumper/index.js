@@ -25,7 +25,7 @@ let nextLogTimer = null;
 
 Client(null, clientCreated);
 
-function clientCreated(err, createdClient){
+function clientCreated(err, createdClient) {
     if (err) {
         throw err;
     }
@@ -51,7 +51,7 @@ function clientCreated(err, createdClient){
             launch,
             pointALittleToTheEast
         ],
-        function (err){
+        function(err) {
             if (err) {
                 throw err;
             }
@@ -61,11 +61,11 @@ function clientCreated(err, createdClient){
     );
 }
 
-function getFirstResult(response){
+function getFirstResult(response) {
     return getResultN(response, 0);
 }
 
-function getResultN(response, n){
+function getResultN(response, n) {
     if (response.error) {
         throw response.error;
     }
@@ -76,13 +76,13 @@ function getResultN(response, n){
     return result.value;
 }
 
-function getInitialInfo(callback){
+function getInitialInfo(callback) {
     let calls = [
         client.services.krpc.getClientId(),
         client.services.spaceCenter.getActiveVessel(),
         client.services.spaceCenter.getBodies()
     ];
-    client.send(calls, function (err, response){
+    client.send(calls, function(err, response) {
         if (err) {
             return callback(err);
         }
@@ -95,13 +95,13 @@ function getInitialInfo(callback){
     });
 }
 
-function connectToStreamServer(callback){
-    client.connectToStreamServer(state.clientId, function (err){
+function connectToStreamServer(callback) {
+    client.connectToStreamServer(state.clientId, function(err) {
         return callback(err);
     });
 }
 
-function getVesselInfo1(callback){
+function getVesselInfo1(callback) {
     const kerbin = state.celestialBodies['Kerbin'];
     let calls = [
         client.services.spaceCenter.vesselGetControl(state.vessel.id),
@@ -111,7 +111,7 @@ function getVesselInfo1(callback){
         client.services.spaceCenter.celestialBodyGetEquatorialRadius(kerbin),
         client.services.spaceCenter.vesselGetResources(state.vessel.id)
     ];
-    client.send(calls, function (err, response){
+    client.send(calls, function(err, response) {
         if (err) {
             return callback(err);
         }
@@ -125,12 +125,12 @@ function getVesselInfo1(callback){
     });
 }
 
-function getVesselInfo2(callback){
+function getVesselInfo2(callback) {
     const calls = [
         client.services.spaceCenter.vesselFlight(state.vessel.id, state.vessel.surfaceReference),
         client.services.spaceCenter.resourcesGetNames(state.vessel.resourceId)
     ];
-    client.send(calls, function (err, response){
+    client.send(calls, function(err, response) {
         if (err) {
             return callback(err);
         }
@@ -140,46 +140,46 @@ function getVesselInfo2(callback){
     });
 }
 
-function addPitchToStream(callback){
+function addPitchToStream(callback) {
     const call = client.services.spaceCenter.flightGetPitch(state.vessel.surfaceFlightId);
     client.addStream(call, 'pitch', callback);
 }
 
-function addRollToStream(callback){
+function addRollToStream(callback) {
     const call = client.services.spaceCenter.flightGetRoll(state.vessel.surfaceFlightId);
     client.addStream(call, 'roll', callback);
 }
 
-function addHeadingToStream(callback){
+function addHeadingToStream(callback) {
     const call = client.services.spaceCenter.flightGetHeading(state.vessel.surfaceFlightId);
     client.addStream(call, 'heading', callback);
 }
 
-function addSurfaceAltitudeToStream(callback){
+function addSurfaceAltitudeToStream(callback) {
     const call = client.services.spaceCenter.flightGetSurfaceAltitude(state.vessel.surfaceFlightId);
     client.addStream(call, 'altitude', callback);
 }
 
-function addSpeedToStream(callback){
+function addSpeedToStream(callback) {
     const call = client.services.spaceCenter.flightGetTrueAirSpeed(state.vessel.surfaceFlightId);
     client.addStream(call, 'speed', callback);
 }
 
-function addThrottleToStream(callback){
+function addThrottleToStream(callback) {
     const call = client.services.spaceCenter.controlGetThrottle(state.vessel.controlId);
     client.addStream(call, 'throttle', callback);
 }
 
-function addThrustToStream(callback){
+function addThrustToStream(callback) {
     const call = client.services.spaceCenter.vesselGetMaxThrust(state.vessel.id);
     client.addStream(call, 'maxThrust', callback);
 }
 
-function addMassToStream(callback){
+function addMassToStream(callback) {
     const call = client.services.spaceCenter.vesselGetMass(state.vessel.id);
     client.addStream(call, 'mass', callback);
 }
-function addResourcesToStream(callback){
+function addResourcesToStream(callback) {
     const liquidFuelName = state.vessel.resources.items.find(name => /liquidfuel/i.test(name));
     const call = client.services.spaceCenter.resourcesAmount(
         state.vessel.resourceId,
@@ -188,7 +188,7 @@ function addResourcesToStream(callback){
     client.addStream(call, 'fuel', callback);
 }
 
-function streamUpdate(streamState){
+function streamUpdate(streamState) {
     if (!state.landed) {
         executeHoverLoop(streamState);
     } else {
@@ -197,38 +197,38 @@ function streamUpdate(streamState){
     logStreamStateIfRequired(streamState);
 }
 
-function logStreamStateIfRequired(streamState){
+function logStreamStateIfRequired(streamState) {
     if (moment.utc().isAfter(nextLogTimer)) {
         console.log(JSON.stringify(streamState, null, 4));
         incrementNextLogTimer();
     }
 }
 
-function incrementNextLogTimer(){
+function incrementNextLogTimer() {
     nextLogTimer = moment.utc().add(logInterval.value, logInterval.period);
 }
 
-function turnSasOn(callback){
+function turnSasOn(callback) {
     let call = client.services.spaceCenter.controlSetSas(state.vessel.controlId, true);
     client.send(call, callback);
 }
 
-function turnRcsOn(callback){
+function turnRcsOn(callback) {
     let call = client.services.spaceCenter.controlSetRcs(state.vessel.controlId, true);
     client.send(call, callback);
 }
 
-function setThrottleToMax(callback){
+function setThrottleToMax(callback) {
     let call = client.services.spaceCenter.controlSetThrottle(state.vessel.controlId, 1);
     client.send(call, callback);
 }
 
-function launch(callback){
+function launch(callback) {
     let call = client.services.spaceCenter.controlActivateNextStage(state.vessel.controlId);
     client.send(call, callback);
 }
 
-function pointALittleToTheEast(callback){
+function pointALittleToTheEast(callback) {
     let call = client.services.spaceCenter.controlSetRight(state.vessel.controlId, 0.3);
     client.send(call, callback);
 }
@@ -251,16 +251,14 @@ let ctr = new Controller(0.05, 0.006, 0.002, 0.05); //Default: 0.25, 0.01, 0.01,
 let targetSpeed = 0;
 let breaksDeployed = false;
 ctr.setTarget(targetSpeed);
-function executeHoverLoop(streamState){
+function executeHoverLoop(streamState) {
     updateSpeedSign(streamState);
     if (streamState.altitude < 200 && !pidOn) {
         return;
     }
     if (streamState.speed > 0 && !pidOn) {
         pidOn = true;
-        client.send([
-            client.services.spaceCenter.controlSetThrottle(state.vessel.controlId, 0)
-        ]);
+        client.send([client.services.spaceCenter.controlSetThrottle(state.vessel.controlId, 0)]);
         return;
     }
     if (streamState.speed <= 0 && !breaksDeployed) {
@@ -289,7 +287,7 @@ function executeHoverLoop(streamState){
     client.send(client.services.spaceCenter.controlSetThrottle(state.vessel.controlId, correction));
 }
 
-function updateSpeedSign(streamState){
+function updateSpeedSign(streamState) {
     streamState.lastAltitude = state.lastAltitude;
     //temp fix for velocities not being returned, need to know if we falling or ascending.
     if (state.lastAltitude > streamState.altitude) {
@@ -298,20 +296,22 @@ function updateSpeedSign(streamState){
     state.lastAltitude = streamState.altitude;
 }
 
-function shutdownProcedure(streamState){
+function shutdownProcedure(streamState) {
     if (!state.shutdownInitiated) {
-        client.send([
-            client.services.spaceCenter.controlSetBrakes(state.vessel.controlId, false)
-        ]);
+        client.send([client.services.spaceCenter.controlSetBrakes(state.vessel.controlId, false)]);
         state.shutdownInitiated = true;
-        setTimeout(function (){
+        setTimeout(function() {
             client.send([
                 client.services.spaceCenter.controlSetGear(state.vessel.controlId, false),
                 client.services.spaceCenter.autoPilotEngage(state.vessel.autoPilot),
-                client.services.spaceCenter.autoPilotTargetPitchAndHeading(state.vessel.autoPilot, 4, 270),
+                client.services.spaceCenter.autoPilotTargetPitchAndHeading(
+                    state.vessel.autoPilot,
+                    4,
+                    270
+                ),
                 client.services.spaceCenter.controlSetThrottle(state.vessel.controlId, 1)
             ]);
-            setTimeout(function (){
+            setTimeout(function() {
                 process.exit(0);
             }, 9000);
         }, 6000);
