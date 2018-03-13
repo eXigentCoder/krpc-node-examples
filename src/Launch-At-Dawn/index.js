@@ -1,5 +1,6 @@
 'use strict';
 const { createClient, spaceCenter } = require('krpc-node');
+const _ = require('lodash');
 let _client;
 (async function run() {
     const client = await createClient();
@@ -17,73 +18,39 @@ let _client;
 
 async function prepForLaunch(falcon9Heavy) {
     const parts = await falcon9Heavy.parts.get();
-    //const merlin1dEngines = await findMerlin1dEnginesMethod1(parts);
-    const merlin1dEngines = await findMerlin1dEnginesMethod2(parts);
-    const centralEngines = findCentralEngines(merlin1dEngines);
+    const centralFuelTank = await findCentralFuelTank(parts);
+    const centralEngines = await findEnginesOnFuelTank(parts, centralFuelTank);
     await setEngineClusterThrust(centralEngines, 0.8);
 }
 
-async function findMerlin1dEnginesMethod1(parts) {
-    const title = 'SpaceX Merlin 1D Full Thrust';
-    // The C# type of the below returned array is KRPC.SpaceCenter.Services.Parts.Part
-    let engineParts = await parts.withTitle(title);
-    const enginePart = engineParts[0];
-    //Throws error.
-    const engine = await enginePart.engine.get();
+async function findCentralFuelTank(parts) {
+    const interStageTitle = 'Falcon 9 1.1 FT Interstage';
+    const fuelTankTitle = 'Falcon 9 1.1 FT Main Fuel Tank';
+    let interstage = (await parts.withTitle(interStageTitle))[0];
+    let interstageChildren = await interstage.children.get();
+    const mainFuelTanks = await parts.withTitle(fuelTankTitle);
+    const centralTank = _.intersectionBy(interstageChildren, mainFuelTanks, comparePartIds);
+    return centralTank[0];
 }
 
-async function findMerlin1dEnginesMethod2(parts) {
-    const engines = await parts.engines.get();
-    const engine = engines[0];
-    const part = await engine.part.get();
-    //As expected(?), the below id's are different.
-    //One represents the KRPC.SpaceCenter.Services.Parts.Engine object
-    //One represents the KRPC.SpaceCenter.Services.Parts.Part object
-    console.log({ partId: part.id, engineId: engine.id });
-    //Throws error.
-    const name = await part.name.get();
-    //Also throws error.
-    //const name = await _client.send(spaceCenter.partGetName(part.id));
-    //Also throws error.
-    //const name = await _client.send(spaceCenter.partGetName(engine.id));
-}
-
-function findCentralEngines(engines) {
-    const centralEngineIndexes = [
-        1
-        // 2,
-        // 3,
-        // 4,
-        // 5,
-        // 6,
-        // 7,
-        // 9,
-        // 10,
-        // 11,
-        // 12,
-        // 13,
-        // 14,
-        // 15,
-        // 16,
-        // 17,
-        // 18,
-        // 19,
-        // 20,
-        // 21,
-        // 22,
-        // 23,
-        // 24,
-        // 25,
-        // 26,
-        // 27
-    ];
-    const centralEngines = [];
-    engines.forEach(function(engine, index) {
-        if (centralEngineIndexes.indexOf(index) > -1) {
-            centralEngines.push(engine);
-        }
+async function findEnginesOnFuelTank(parts, fuelTank) {
+    const octawebTitle = 'Falcon 9 Octaweb';
+    const merlin1dEngineTitle = 'SpaceX Merlin 1D Full Thrust';
+    const octawebs = await parts.withTitle(octawebTitle);
+    let children = await fuelTank.children.get();
+    const thisOctaweb = _.intersectionBy(octawebs, children, comparePartIds)[0];
+    children = await thisOctaweb.children.get();
+    const allMerlin1dFTEngines = await parts.withTitle(merlin1dEngineTitle);
+    const engineParts = _.intersectionBy(children, allMerlin1dFTEngines, comparePartIds);
+    const promises = [];
+    engineParts.forEach(function(enginePart) {
+        promises.push(enginePart.engine.get());
     });
-    return centralEngines;
+    return await Promise.all(promises);
+}
+
+function comparePartIds(part) {
+    return part.id;
 }
 
 async function setEngineClusterThrust(cluster, thrustPercentage) {
