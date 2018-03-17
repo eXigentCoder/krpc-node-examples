@@ -4,6 +4,7 @@ const _ = require('lodash');
 const buildVesselModel = require('./build-vessel-model');
 const returnFunctionOptions = { _fn: true };
 const handleStreamUpdate = require('./handle-stream-update');
+const setEngineClusterThrust = require('./set-engine-cluster-thrust');
 let _client;
 (async function run() {
     const client = await createClient();
@@ -32,14 +33,6 @@ async function prepForLaunch(falcon9Heavy) {
     );
     callBatch.push(await falcon9Heavy.control.throttle.set(returnFunctionOptions, 1));
     await _client.send(callBatch);
-}
-
-async function setEngineClusterThrust(cluster, thrustPercentage) {
-    const promises = [];
-    cluster.forEach(function(engine) {
-        promises.push(engine.thrustLimit.set(returnFunctionOptions, thrustPercentage));
-    });
-    return await Promise.all(promises);
 }
 
 process.on('uncaughtException', async function(err) {

@@ -1,28 +1,24 @@
 'use strict';
 let _currentState;
 let _ = require('lodash');
+const setEngineClusterThrust = require('./set-engine-cluster-thrust');
+
 let stateQueue = [
-    {
-        done: false,
-        fn: initiateRollManeuver
-    },
-    {
-        done: false,
-        fn: initiateGravityTurn
-    },
-    {
-        done: false,
-        fn: step3
-    },
-    {
-        done: false,
-        fn: close
-    },
-    {
-        done: false,
-        fn: done
-    }
+    wrapFnStep(waitForAltitude(initiateRollManeuver, 'initiateRollManeuver', 150)),
+    wrapFnStep(waitForAltitude(initiateGravityTurn, 'initiateGravityTurn', 2000)),
+    wrapFnStep(waitForAltitude(initiateBoosterSeparation, 'initiateBoosterSeparation', 25000)),
+    wrapFnStep(waitForAltitude(initiateBoosterSeparation, 'initiateBoosterSeparation', 300000)),
+    wrapFnStep(close),
+    wrapFnStep(done)
 ];
+
+function wrapFnStep(fn) {
+    return {
+        processing: false,
+        done: false,
+        fn
+    };
+}
 
 module.exports = function(client, falcon9Heavy) {
     stateQueue = _.reverse(stateQueue);
@@ -37,59 +33,47 @@ module.exports = function(client, falcon9Heavy) {
     };
 };
 
-async function initiateRollManeuver({ streamUpdate, falcon9Heavy, state }) {
-    if (state.done) {
-        return;
-    }
-    const targetAltitude = 150;
-    if (streamUpdate.altitude < targetAltitude) {
-        console.log(
-            `initiateRollManeuver waiting ${percentageToTarget(
-                targetAltitude,
-                streamUpdate.altitude
-            )}`
-        );
-        return;
-    }
-    console.log('initiateRollManeuver setting new heading');
-    await falcon9Heavy.autoPilot.targetPitchAndHeading(85, 90);
-    pop(state);
+function waitForAltitude(fn, fnName, targetAltitude) {
+    return async function({ streamUpdate, client, falcon9Heavy, state }) {
+        if (shouldSkip(state)) {
+            return;
+        }
+        if (streamUpdate.altitude < targetAltitude) {
+            console.log(
+                `${fnName} waiting ${percentageToTarget(targetAltitude, streamUpdate.altitude)}`
+            );
+            return;
+        }
+        state.processing = true;
+        console.log('${fnName} processing');
+        await fn({ streamUpdate, client, falcon9Heavy, state });
+        pop(state);
+    };
 }
 
-async function initiateGravityTurn({ streamUpdate, falcon9Heavy, state }) {
-    if (state.done) {
-        return;
-    }
-    const targetAltitude = 2000;
-    if (streamUpdate.altitude < targetAltitude) {
-        console.log(
-            `initiateGravityTurn waiting ${percentageToTarget(
-                targetAltitude,
-                streamUpdate.altitude
-            )}`
-        );
-        return;
-    }
-    console.log('initiateRollManeuver setting SAS to prograde');
+async function initiateRollManeuver({ falcon9Heavy }) {
+    await falcon9Heavy.autoPilot.targetPitchAndHeading(85, 90);
+}
+
+async function initiateGravityTurn({ falcon9Heavy }) {
     await falcon9Heavy.autoPilot.disengage();
     await falcon9Heavy.control.sas.set(true);
     await falcon9Heavy.control.sasMode.set('Prograde');
-    pop(state);
 }
 
-async function step3({ streamUpdate, state }) {
-    if (state.done) {
-        return;
-    }
-    const targetAltitude = 25000;
-    if (streamUpdate.altitude < targetAltitude) {
-        console.log(`step3 waiting ${percentageToTarget(targetAltitude, streamUpdate.altitude)}`);
-        return;
-    }
-    pop(state);
+async function initiateBoosterSeparation({ falcon9Heavy, client }) {
+    let boosterEngineCallBatch = await setEngineClusterThrust(falcon9Heavy.leftCore.engines, 0);
+    boosterEngineCallBatch = boosterEngineCallBatch.concat(
+        await setEngineClusterThrust(falcon9Heavy.rightCore.engines, 0)
+    );
+    await client.send(boosterEngineCallBatch);
+    await falcon9Heavy.control.activateNextStage();
 }
 
 async function close({ client, state }) {
+    if (shouldSkip(state)) {
+        return;
+    }
     console.log('closing');
     await client.close();
     pop(state);
@@ -111,4 +95,8 @@ function pop(state) {
     }
     state.done = true;
     _currentState = stateQueue.pop();
+}
+
+function shouldSkip(state) {
+    return state.done || state.processing;
 }
