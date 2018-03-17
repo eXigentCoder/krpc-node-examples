@@ -36,12 +36,14 @@ module.exports = async function buildVesselModel(falcon9Heavy) {
     const autoPilot = await falcon9Heavy.autoPilot.get();
     const surfaceReference = await falcon9Heavy.surfaceReferenceFrame.get();
     const flight = await falcon9Heavy.flight(surfaceReference);
+    const orbit = await falcon9Heavy.orbit.get();
     /* Left and right are orientated towards the camera in locked mode*/
     return {
         _raw: falcon9Heavy,
         control,
         autoPilot,
         flight,
+        orbit,
         leftCore: {
             fuelTank: leftTank,
             engines: leftEngines

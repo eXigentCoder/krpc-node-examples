@@ -33,20 +33,33 @@ module.exports = function(client, falcon9Heavy) {
     };
 };
 
-function waitForAltitude(fn, fnName, targetAltitude) {
+function waitForAltitude(action, functionName, targetAltitude) {
+    function atTargetAltitude(streamUpdate) {
+        if (streamUpdate.altitude < targetAltitude) {
+            console.log(
+                `${functionName} waiting ${percentageToTarget(
+                    targetAltitude,
+                    streamUpdate.altitude
+                )}`
+            );
+            return false;
+        }
+        return true;
+    }
+    return waitForCondition(action, functionName, atTargetAltitude);
+}
+
+function waitForCondition(action, functionName, atTarget) {
     return async function({ streamUpdate, client, falcon9Heavy, state }) {
         if (shouldSkip(state)) {
             return;
         }
-        if (streamUpdate.altitude < targetAltitude) {
-            console.log(
-                `${fnName} waiting ${percentageToTarget(targetAltitude, streamUpdate.altitude)}`
-            );
+        if (!atTarget(streamUpdate)) {
             return;
         }
         state.processing = true;
-        console.log('${fnName} processing');
-        await fn({ streamUpdate, client, falcon9Heavy, state });
+        console.log(`${functionName} processing`);
+        await action({ streamUpdate, client, falcon9Heavy, state });
         pop(state);
     };
 }
