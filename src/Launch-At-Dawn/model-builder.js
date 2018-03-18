@@ -16,17 +16,17 @@ async function buildFalcon9OnPad(falcon9Heavy) {
     const merlin1dEngineTitle = 'SpaceX Merlin 1D Full Thrust';
     const parts = await falcon9Heavy.parts.get();
     const allMerlin1dFTEngines = await parts.withTitle(merlin1dEngineTitle);
-    const allf9MainFuelTanks = await parts.withTitle(fuelTankTitle);
+    const allF9MainFuelTanks = await parts.withTitle(fuelTankTitle);
     const allOctawebs = await parts.withTitle(octawebTitle);
     let interstage = oneOrError(await parts.withTitle(interStageTitle));
     let interstageChildren = await interstage.children.get();
-    const centralTank = oneOrError(_.intersectionBy(interstageChildren, allf9MainFuelTanks, byId));
+    const centralTank = oneOrError(_.intersectionBy(interstageChildren, allF9MainFuelTanks, byId));
     const centralEngines = await getEnginesForF9MainFuelTank(
         allMerlin1dFTEngines,
         allOctawebs,
         centralTank
     );
-    const otherTanks = nOrError(2, _.differenceBy(allf9MainFuelTanks, [centralTank], byId));
+    const otherTanks = nOrError(2, _.differenceBy(allF9MainFuelTanks, [centralTank], byId));
     const leftTank = otherTanks[0];
     const rightTank = otherTanks[1];
     const leftEngines = await getEnginesForF9MainFuelTank(
@@ -81,12 +81,16 @@ async function getEnginesForF9MainFuelTank(allMerlin1dFTEngines, allOctawebs, fu
 async function buildBoosterCoresPostSeparation({ falcon9Heavy, client }) {
     const allVessels = await client.send(spaceCenter.getVessels());
     const otherVessels = _.differenceBy(allVessels, [falcon9Heavy._raw], byId);
-    const promises = [];
-    otherVessels.forEach(vessel => {
-        promises.push(vessel.name.get(returnFunctionOptions));
-    });
-    const namedCalls = Promise.all(promises);
-    const names = await client.send(boosterEngineCallBatch);
+    for (let vessel of otherVessels) {
+        const type = await vessel.type.get();
+        if (type !== 'Probe') {
+            return;
+        }
+        const parts = await vessel.parts.get();
+        //TODO Why is this throwing an error?
+        const allParts = await parts.all.get();
+        console.log(`${allParts.length()}`);
+    }
     return {
         left: {},
         right: {}
