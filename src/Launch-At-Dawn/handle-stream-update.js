@@ -3,6 +3,9 @@ const setEngineClusterThrust = require('./set-engine-cluster-thrust');
 const modelBuilder = require('./model-builder');
 const stepRunner = require('./step-runner');
 const returnFunctionOptions = { _fn: true };
+const { spaceCenter } = require('krpc-node');
+const util = require('util');
+const sleep = util.promisify(setTimeout);
 
 let stepQueue = [
     // throttleDownCentralCore,
@@ -12,9 +15,9 @@ let stepQueue = [
     // { action: initiateBoosterSeparation, condition: checkAboveAltitude(25000) },
     // { action: close, condition: checkAboveAltitude(300000) },
     stage,
-    stage,
     initiateBoosterSeparation,
-    done
+    { action: done, condition: checkAboveAltitude(25000) }
+    //done
 ];
 
 module.exports = function(client, falcon9Heavy) {
@@ -63,11 +66,23 @@ async function initiateBoosterSeparation({ state, client }) {
         falcon9Heavy,
         client
     });
-    const leftCore = cores.left;
-    await leftCore.control.rcs.set(true);
-    await leftCore.autoPilot.engage();
-    await leftCore.autoPilot.targetPitchAndHeading(0, 270);
-    console.log(cores);
+    Object.assign(falcon9Heavy.leftCore, cores.left);
+    Object.assign(falcon9Heavy.rightCore, cores.right);
+    await coreRTLS(falcon9Heavy.leftCore, client);
+    await coreRTLS(falcon9Heavy.rightCore, client);
+}
+
+async function coreRTLS(core, client) {
+    await core.control.rcs.set(true);
+    await core.autoPilot.engage();
+    await core.autoPilot.targetPitchAndHeading(0, 270);
+    await sleep(fireEngines, 1500);
+
+    async function fireEngines() {
+        let calls = await setEngineClusterThrust(core.engines, 1);
+        calls = calls.concat(await core.control.throttle.set(returnFunctionOptions, 1));
+        await client.send(calls);
+    }
 }
 
 async function stage({ state }) {

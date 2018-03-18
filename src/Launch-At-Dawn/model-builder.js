@@ -90,11 +90,15 @@ async function buildBoosterCoresPostSeparation({ falcon9Heavy, client }) {
         if (type !== 'Probe') {
             continue;
         }
-        if (!cores.left) {
-            cores.left = await buildSideCore(vessel);
+        const name = await vessel.name.get();
+        if (name.toLowerCase().indexOf('fh') < 0) {
             continue;
         }
-        cores.right = await buildSideCore(vessel);
+        if (!cores.right) {
+            cores.right = await buildSideCore(vessel, client);
+            continue;
+        }
+        cores.left = await buildSideCore(vessel, client);
     }
     return cores;
 }
@@ -102,9 +106,9 @@ async function buildBoosterCoresPostSeparation({ falcon9Heavy, client }) {
 async function buildSideCore(vessel) {
     const autoPilot = await vessel.autoPilot.get();
     const control = await vessel.control.get();
-    //const parts = await vessel.parts.get();
+    const parts = await vessel.parts.get();
     //TODO Why is this throwing an error?
-    // const allParts = await parts.all.get();
+    const allParts = await parts.all.get();
     // console.log(`${allParts.length()}`);
     return {
         _raw: vessel,
