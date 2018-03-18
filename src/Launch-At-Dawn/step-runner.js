@@ -24,22 +24,25 @@ function runSteps(steps, client, state) {
                 return logProgressToCondition(actionName, result.percentage);
             }
         }
-        console.log(`About to run ${actionName}`);
+        console.log(`[StepRunner] :About to run ${actionName}`);
         step.processing = true;
         try {
             await step.action({ streamUpdate, client, state, step });
         } catch (err) {
-            console.error(`Error on ${actionName}`);
-            throw err;
+            console.error(`[StepRunner] :Error on ${actionName}\n${err.message}\n${err.stack}`);
+            step.done = true;
+            await client.close();
+            // eslint-disable-next-line no-process-exit
+            process.exit(-1);
         }
         step.done = true;
-        console.log(`Done with ${actionName}`);
+        console.log(`[StepRunner] :Done with ${actionName}`);
         step = stepQueue.pop();
     };
 
     function logProgressToCondition(actionName, percentageToTarget) {
         if (moment.utc().isAfter(nextLogTimer)) {
-            console.log(`${actionName} waiting ${percentageToTarget}`);
+            console.log(`[StepRunner] :${actionName} waiting ${percentageToTarget}`);
             incrementNextLogTimer();
         }
     }
