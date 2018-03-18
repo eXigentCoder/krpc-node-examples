@@ -81,19 +81,35 @@ async function getEnginesForF9MainFuelTank(allMerlin1dFTEngines, allOctawebs, fu
 async function buildBoosterCoresPostSeparation({ falcon9Heavy, client }) {
     const allVessels = await client.send(spaceCenter.getVessels());
     const otherVessels = _.differenceBy(allVessels, [falcon9Heavy._raw], byId);
+    const cores = {
+        left: null,
+        right: null
+    };
     for (let vessel of otherVessels) {
         const type = await vessel.type.get();
         if (type !== 'Probe') {
-            return;
+            continue;
         }
-        const parts = await vessel.parts.get();
-        //TODO Why is this throwing an error?
-        const allParts = await parts.all.get();
-        console.log(`${allParts.length()}`);
+        if (!cores.left) {
+            cores.left = await buildSideCore(vessel);
+            continue;
+        }
+        cores.right = await buildSideCore(vessel);
     }
+    return cores;
+}
+
+async function buildSideCore(vessel) {
+    const autoPilot = await vessel.autoPilot.get();
+    const control = await vessel.control.get();
+    //const parts = await vessel.parts.get();
+    //TODO Why is this throwing an error?
+    // const allParts = await parts.all.get();
+    // console.log(`${allParts.length()}`);
     return {
-        left: {},
-        right: {}
+        _raw: vessel,
+        autoPilot,
+        control
     };
 }
 
