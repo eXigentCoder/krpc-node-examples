@@ -1,115 +1,86 @@
 'use strict';
-let _currentState;
-let _ = require('lodash');
 const setEngineClusterThrust = require('./set-engine-cluster-thrust');
+const modelBuilder = require('./model-builder');
+const stepRunner = require('./step-runner');
+const returnFunctionOptions = { _fn: true };
 
-let stateQueue = [
-    wrapFnStep(waitForAltitude(initiateRollManeuver, 'initiateRollManeuver', 150)),
-    wrapFnStep(waitForAltitude(initiateGravityTurn, 'initiateGravityTurn', 2000)),
-    wrapFnStep(waitForAltitude(initiateBoosterSeparation, 'initiateBoosterSeparation', 25000)),
-    wrapFnStep(waitForAltitude(initiateBoosterSeparation, 'initiateBoosterSeparation', 300000)),
-    wrapFnStep(close),
-    wrapFnStep(done)
+let stepQueue = [
+    throttleDownCentralCore,
+    launch,
+    { action: initiateRollManeuver, condition: checkAboveAltitude(150) },
+    { action: initiateGravityTurn, condition: checkAboveAltitude(2000) },
+    { action: initiateBoosterSeparation, condition: checkAboveAltitude(25000) },
+    { action: close, condition: checkAboveAltitude(300000) },
+    // initiateBoosterSeparation,
+    done
 ];
 
-function wrapFnStep(fn) {
-    return {
-        processing: false,
-        done: false,
-        fn
-    };
-}
-
 module.exports = function(client, falcon9Heavy) {
-    stateQueue = _.reverse(stateQueue);
-    _currentState = stateQueue.pop();
-    return async function(streamUpdate) {
-        try {
-            await _currentState.fn({ streamUpdate, client, falcon9Heavy, state: _currentState });
-        } catch (err) {
-            //terminate stream?
-            throw err;
-        }
-    };
+    let state = { falcon9Heavy };
+    return stepRunner.runSteps(stepQueue, client, state);
 };
 
-function waitForAltitude(action, functionName, targetAltitude) {
-    function atTargetAltitude(streamUpdate) {
-        if (streamUpdate.altitude < targetAltitude) {
-            console.log(
-                `${functionName} waiting ${percentageToTarget(
-                    targetAltitude,
-                    streamUpdate.altitude
-                )}`
-            );
-            return false;
-        }
-        return true;
-    }
-    return waitForCondition(action, functionName, atTargetAltitude);
+async function throttleDownCentralCore({ state, client }) {
+    let { falcon9Heavy } = state;
+    const callBatch = await setEngineClusterThrust(falcon9Heavy.centerCore.engines, 0.6);
+    callBatch.push(await falcon9Heavy.autoPilot.engage(returnFunctionOptions));
+    callBatch.push(
+        await falcon9Heavy.autoPilot.targetPitchAndHeading(returnFunctionOptions, 90, 0)
+    );
+    callBatch.push(await falcon9Heavy.control.throttle.set(returnFunctionOptions, 1));
+    await client.send(callBatch);
 }
 
-function waitForCondition(action, functionName, atTarget) {
-    return async function({ streamUpdate, client, falcon9Heavy, state }) {
-        if (shouldSkip(state)) {
-            return;
-        }
-        if (!atTarget(streamUpdate)) {
-            return;
-        }
-        state.processing = true;
-        console.log(`${functionName} processing`);
-        await action({ streamUpdate, client, falcon9Heavy, state });
-        pop(state);
-    };
+async function launch({ state }) {
+    let { falcon9Heavy } = state;
+    await falcon9Heavy.control.activateNextStage();
+    await falcon9Heavy.control.activateNextStage();
 }
 
-async function initiateRollManeuver({ falcon9Heavy }) {
+async function initiateRollManeuver({ state }) {
+    let { falcon9Heavy } = state;
     await falcon9Heavy.autoPilot.targetPitchAndHeading(85, 90);
 }
 
-async function initiateGravityTurn({ falcon9Heavy }) {
+async function initiateGravityTurn({ state }) {
+    let { falcon9Heavy } = state;
     await falcon9Heavy.autoPilot.disengage();
     await falcon9Heavy.control.sas.set(true);
     await falcon9Heavy.control.sasMode.set('Prograde');
 }
 
-async function initiateBoosterSeparation({ falcon9Heavy, client }) {
+async function initiateBoosterSeparation({ state, client }) {
+    let { falcon9Heavy } = state;
     let boosterEngineCallBatch = await setEngineClusterThrust(falcon9Heavy.leftCore.engines, 0);
     boosterEngineCallBatch = boosterEngineCallBatch.concat(
         await setEngineClusterThrust(falcon9Heavy.rightCore.engines, 0)
     );
     await client.send(boosterEngineCallBatch);
     await falcon9Heavy.control.activateNextStage();
+
+    const cores = await modelBuilder.buildBoosterCoresPostSeparation({
+        falcon9Heavy,
+        client
+    });
+    console.log(cores);
 }
 
-async function close({ client, state }) {
-    if (shouldSkip(state)) {
-        return;
-    }
+async function close({ client }) {
     console.log('closing');
     await client.close();
-    pop(state);
 }
 
 function done() {
     console.log('Done!');
+    // eslint-disable-next-line no-process-exit
     process.exit(0);
 }
 
-function percentageToTarget(target, current) {
-    const percentage = (current / target * 100).toFixed(2);
-    return `${percentage} %`;
-}
-
-function pop(state) {
-    if (state.done) {
-        return;
-    }
-    state.done = true;
-    _currentState = stateQueue.pop();
-}
-
-function shouldSkip(state) {
-    return state.done || state.processing;
+function checkAboveAltitude(targetAltitude) {
+    return function atTargetAltitude(streamUpdate) {
+        return {
+            shouldRun: streamUpdate.altitude >= targetAltitude,
+            percentage: stepRunner.percentageToTarget(targetAltitude, streamUpdate.altitude)
+        };
+    };
 }
