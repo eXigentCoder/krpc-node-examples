@@ -17,19 +17,19 @@ let stepQueue = [
     throttleUpCentralCore,
     { action: beginBoostBackBurn, condition: delay(6.5, 'seconds') },
     { action: accelerateBoostBackBurn, condition: delay(1.5, 'seconds') },
-    { action: stopBoostBackBurn, condition: checkAboveAltitude(43000) },
+    { action: stopBoostBackBurn, condition: checkAboveAltitude(41000) },
     { action: meco, condition: checkAboveApoapsis(100000) },
     { action: secondStageBoost, condition: delay(3, 'seconds') },
     { action: endSecondStageBoost, condition: delay(1, 'seconds') },
     { action: flipCentralCore, condition: delay(1, 'seconds') },
     { action: deployFairings, condition: delay(6, 'seconds') },
-    { action: initiateCircularisationBurn, condition: checkAboveAltitude(95000) },
+    { action: initiateCircularisationBurn, condition: checkAboveAltitude(97500) },
     { action: secondStageEngineCutoff, condition: checkAbovePeriapsis(100000) },
     { action: done, condition: delay(1, 'seconds') }
 ];
 
 module.exports = function(client, falcon9Heavy) {
-    let state = { falcon9Heavy };
+    let state = { falcon9Heavy };m
     return stepRunner.runSteps(stepQueue, client, state);
 };
 
