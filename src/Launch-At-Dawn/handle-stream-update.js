@@ -8,16 +8,21 @@ const moment = require('moment');
 
 let stepQueue = [
     throttleDownCentralCore,
-    { action: launch, condition: delay(3, 'seconds') },
+    //todo UI countdown
+    launch,
     { action: initiateRollManeuver, condition: checkAboveAltitude(150) },
     { action: initiateGravityTurn, condition: checkAboveAltitude(2400) },
     { action: initiateBoosterSeparation, condition: checkAboveAltitude(25000) },
+    setBoosterAutoPilot,
+    throttleUpCentralCore,
+    { action: beginBoostBackBurn, condition: delay(6.5, 'seconds') },
+    { action: accelerateBoostBackBurn, condition: delay(1.5, 'seconds') },
     { action: meco, condition: checkAboveApoapsis(100000) },
     { action: secondStageBoost, condition: delay(3, 'seconds') },
     { action: endSecondStageBoost, condition: delay(1, 'seconds') },
     { action: flipCentralCore, condition: delay(1, 'seconds') },
     { action: deployFairings, condition: delay(6, 'seconds') },
-    { action: initiateCircularisationBurn, condition: checkAboveAltitude(90000) },
+    { action: initiateCircularisationBurn, condition: checkAboveAltitude(94000) },
     { action: secondStageEngineCutoff, condition: checkAbovePeriapsis(100000) },
     { action: done, condition: checkAboveAltitude(100000) }
 ];
@@ -69,6 +74,10 @@ async function initiateBoosterSeparation({ state, client }) {
     });
     Object.assign(falcon9Heavy.leftCore, cores.left);
     Object.assign(falcon9Heavy.rightCore, cores.right);
+}
+
+async function setBoosterAutoPilot({ state, client }) {
+    let { falcon9Heavy } = state;
     await coreRTLS(falcon9Heavy.leftCore, client);
     await coreRTLS(falcon9Heavy.rightCore, client);
 }
@@ -77,15 +86,31 @@ async function coreRTLS(core, client) {
     await core.control.rcs.set(true);
     await core.autoPilot.engage();
     await core.autoPilot.targetPitchAndHeading(0, 270);
-    setTimeout(fireEngines, 6500);
-
-    async function fireEngines() {
-        let calls = await setEngineClusterThrust(core.engines, 1);
-        calls = calls.concat(await core.control.throttle.set(returnFunctionOptions, 0.25));
-        await client.send(calls);
-    }
 }
 
+async function beginBoostBackBurn({ state, client }) {
+    let { falcon9Heavy } = state;
+    await fireEngines(falcon9Heavy.leftCore, client, 0.2);
+    await fireEngines(falcon9Heavy.rightCore, client, 0.2);
+}
+
+async function fireEngines(core, client, thrust) {
+    let calls = await setEngineClusterThrust(core.engines, 1);
+    calls = calls.concat(await core.control.throttle.set(returnFunctionOptions, thrust));
+    await client.send(calls);
+}
+
+async function accelerateBoostBackBurn({ state, client }) {
+    let { falcon9Heavy } = state;
+    await fireEngines(falcon9Heavy.leftCore, client, 1);
+    await fireEngines(falcon9Heavy.rightCore, client, 1);
+}
+
+async function throttleUpCentralCore({ state, client }) {
+    let { falcon9Heavy } = state;
+    const callBatch = await setEngineClusterThrust(falcon9Heavy.centerCore.engines, 1);
+    await client.send(callBatch);
+}
 async function meco({ state }) {
     let { falcon9Heavy } = state;
     await falcon9Heavy.control.throttle.set(0);
@@ -122,7 +147,7 @@ async function initiateCircularisationBurn({ state }) {
     let { falcon9Heavy } = state;
     await falcon9Heavy.control.throttle.set(1);
 }
-async function secondStageEngineCutoff({state}) {
+async function secondStageEngineCutoff({ state }) {
     let { falcon9Heavy } = state;
     await falcon9Heavy.control.throttle.set(1);
 }
