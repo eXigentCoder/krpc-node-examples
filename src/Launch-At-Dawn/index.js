@@ -10,6 +10,7 @@ let _client;
     const client = await createClient();
     try {
         _client = client;
+        //await client.send(spaceCenter.quickload());
         const falcon9HeavyRaw = await client.send(spaceCenter.getActiveVessel());
         const falcon9Heavy = await modelBuilder.buildFalcon9OnPad(falcon9HeavyRaw);
         await client.connectToStreamServer();
@@ -48,4 +49,6 @@ async function registerStreams(falcon9Heavy, client) {
     await client.addStream(getAltitudeCall, 'altitude');
     let getApoapsisCall = await falcon9Heavy.orbit.apoapsisAltitude.get(returnFunctionOptions);
     await client.addStream(getApoapsisCall, 'apoapsis');
+    let getPeriapsisCall = await falcon9Heavy.orbit.periapsisAltitude.get(returnFunctionOptions);
+    await client.addStream(getPeriapsisCall, 'periapsis');
 }

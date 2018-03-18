@@ -6,7 +6,8 @@ const { spaceCenter } = require('krpc-node');
 
 module.exports = {
     buildFalcon9OnPad,
-    buildBoosterCoresPostSeparation
+    buildBoosterCoresPostSeparation,
+    buildCentralCoreAfterSeparation
 };
 
 async function buildFalcon9OnPad(falcon9Heavy) {
@@ -106,10 +107,6 @@ async function buildBoosterCoresPostSeparation({ falcon9Heavy, client }) {
 async function buildSideCore(vessel) {
     const autoPilot = await vessel.autoPilot.get();
     const control = await vessel.control.get();
-    const parts = await vessel.parts.get();
-    //TODO Why is this throwing an error?
-    const allParts = await parts.all.get();
-    // console.log(`${allParts.length()}`);
     return {
         _raw: vessel,
         autoPilot,
@@ -117,6 +114,15 @@ async function buildSideCore(vessel) {
     };
 }
 
+async function buildCentralCoreAfterSeparation(vessel) {
+    const autoPilot = await vessel.autoPilot.get();
+    const control = await vessel.control.get();
+    return {
+        _raw: vessel,
+        autoPilot,
+        control
+    };
+}
 function oneOrError(arr) {
     return nOrError(1, arr);
 }

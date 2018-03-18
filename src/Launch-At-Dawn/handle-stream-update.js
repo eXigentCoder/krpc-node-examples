@@ -4,15 +4,22 @@ const modelBuilder = require('./model-builder');
 const stepRunner = require('./step-runner');
 const returnFunctionOptions = { _fn: true };
 //const { spaceCenter } = require('krpc-node');
+const moment = require('moment');
 
 let stepQueue = [
     throttleDownCentralCore,
-    launch,
+    { action: launch, condition: delay(3, 'seconds') },
     { action: initiateRollManeuver, condition: checkAboveAltitude(150) },
     { action: initiateGravityTurn, condition: checkAboveAltitude(2400) },
     { action: initiateBoosterSeparation, condition: checkAboveAltitude(25000) },
-    { action: meco, condition: checkAboveApoapsis(1000000) },
-    { action: done, condition: checkAboveAltitude(1000000) }
+    { action: meco, condition: checkAboveApoapsis(100000) },
+    { action: secondStageBoost, condition: delay(3, 'seconds') },
+    { action: endSecondStageBoost, condition: delay(1, 'seconds') },
+    { action: flipCentralCore, condition: delay(1, 'seconds') },
+    { action: deployFairings, condition: delay(6, 'seconds') },
+    { action: initiateCircularisationBurn, condition: checkAboveAltitude(90000) },
+    { action: secondStageEngineCutoff, condition: checkAbovePeriapsis(100000) },
+    { action: done, condition: checkAboveAltitude(100000) }
 ];
 
 module.exports = function(client, falcon9Heavy) {
@@ -70,11 +77,11 @@ async function coreRTLS(core, client) {
     await core.control.rcs.set(true);
     await core.autoPilot.engage();
     await core.autoPilot.targetPitchAndHeading(0, 270);
-    setTimeout(fireEngines, 7000);
+    setTimeout(fireEngines, 6500);
 
     async function fireEngines() {
         let calls = await setEngineClusterThrust(core.engines, 1);
-        calls = calls.concat(await core.control.throttle.set(returnFunctionOptions, 0.5));
+        calls = calls.concat(await core.control.throttle.set(returnFunctionOptions, 0.25));
         await client.send(calls);
     }
 }
@@ -82,24 +89,47 @@ async function coreRTLS(core, client) {
 async function meco({ state }) {
     let { falcon9Heavy } = state;
     await falcon9Heavy.control.throttle.set(0);
-    await falcon9Heavy.control.activateNextStage();
-    await falcon9Heavy.control.activateNextStage();
-    await falcon9Heavy.control.throttle.set(0.1);
-    setTimeout(async function() {
-        await falcon9Heavy.control.throttle.set(0);
-    }, 500);
 }
-// async function stage({ state }) {
-//     let { falcon9Heavy } = state;
-//     await falcon9Heavy.control.activateNextStage();
-// }
 
-async function close({ client }) {
+async function secondStageBoost({ state }) {
+    let { falcon9Heavy } = state;
+    await falcon9Heavy.control.activateNextStage();
+    await falcon9Heavy.control.activateNextStage();
+    //todo RK use RCS for this
+    await falcon9Heavy.control.throttle.set(0.1);
+}
+async function endSecondStageBoost({ state }) {
+    let { falcon9Heavy } = state;
+    await falcon9Heavy.control.throttle.set(0);
+}
+
+async function flipCentralCore({ state }) {
+    let { falcon9Heavy } = state;
+    const vessel = await falcon9Heavy.centerCore.fuelTank.vessel.get();
+    let centralCore = await modelBuilder.buildCentralCoreAfterSeparation(vessel);
+    Object.assign(falcon9Heavy.centerCore, centralCore);
+    await centralCore.control.rcs.set(true);
+    await centralCore.control.sas.set(true);
+    await centralCore.control.sasMode.set('Retrograde');
+}
+
+async function deployFairings({ state }) {
+    let { falcon9Heavy } = state;
+    await falcon9Heavy.control.activateNextStage();
+}
+
+async function initiateCircularisationBurn({ state }) {
+    let { falcon9Heavy } = state;
+    await falcon9Heavy.control.throttle.set(1);
+}
+async function secondStageEngineCutoff({state}) {
+    let { falcon9Heavy } = state;
+    await falcon9Heavy.control.throttle.set(1);
+}
+
+async function done({ client }) {
     console.log('closing');
     await client.close();
-}
-
-function done() {
     console.log('Done!');
     // eslint-disable-next-line no-process-exit
     process.exit(0);
@@ -118,6 +148,24 @@ function checkAboveApoapsis(targetApoapsis) {
         return {
             shouldRun: streamUpdate.apoapsis >= targetApoapsis,
             percentage: stepRunner.percentageToTarget(targetApoapsis, streamUpdate.apoapsis)
+        };
+    };
+}
+function checkAbovePeriapsis(targetPeriapsis) {
+    return function atTargetPeriapsis(streamUpdate) {
+        return {
+            shouldRun: streamUpdate.periapsis >= targetPeriapsis,
+            percentage: stepRunner.percentageToTarget(targetPeriapsis, streamUpdate.periapsis)
+        };
+    };
+}
+function delay(value, period) {
+    let runAt;
+    return function atTargetApoapsis() {
+        runAt = runAt || moment.utc().add(value, period);
+        return {
+            shouldRun: moment.utc().isAfter(runAt),
+            percentage: runAt.fromNow()
         };
     };
 }
