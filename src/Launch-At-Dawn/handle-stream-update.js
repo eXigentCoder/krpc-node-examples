@@ -9,13 +9,10 @@ let stepQueue = [
     throttleDownCentralCore,
     launch,
     { action: initiateRollManeuver, condition: checkAboveAltitude(150) },
-    { action: initiateGravityTurn, condition: checkAboveAltitude(2000) },
+    { action: initiateGravityTurn, condition: checkAboveAltitude(2400) },
     { action: initiateBoosterSeparation, condition: checkAboveAltitude(25000) },
-    { action: close, condition: checkAboveAltitude(300000) },
-    //stage,
-    //initiateBoosterSeparation,
-    //{ action: done, condition: checkAboveAltitude(25000) }
-    done
+    { action: meco, condition: checkAboveApoapsis(1000000) },
+    { action: done, condition: checkAboveAltitude(1000000) }
 ];
 
 module.exports = function(client, falcon9Heavy) {
@@ -25,7 +22,7 @@ module.exports = function(client, falcon9Heavy) {
 
 async function throttleDownCentralCore({ state, client }) {
     let { falcon9Heavy } = state;
-    const callBatch = await setEngineClusterThrust(falcon9Heavy.centerCore.engines, 0.5);
+    const callBatch = await setEngineClusterThrust(falcon9Heavy.centerCore.engines, 0.55);
     callBatch.push(await falcon9Heavy.autoPilot.engage(returnFunctionOptions));
     callBatch.push(
         await falcon9Heavy.autoPilot.targetPitchAndHeading(returnFunctionOptions, 90, 0)
@@ -73,15 +70,25 @@ async function coreRTLS(core, client) {
     await core.control.rcs.set(true);
     await core.autoPilot.engage();
     await core.autoPilot.targetPitchAndHeading(0, 270);
-    setTimeout(fireEngines, 10000);
+    setTimeout(fireEngines, 7000);
 
     async function fireEngines() {
         let calls = await setEngineClusterThrust(core.engines, 1);
-        calls = calls.concat(await core.control.throttle.set(returnFunctionOptions, 1));
+        calls = calls.concat(await core.control.throttle.set(returnFunctionOptions, 0.5));
         await client.send(calls);
     }
 }
 
+async function meco({ state }) {
+    let { falcon9Heavy } = state;
+    await falcon9Heavy.control.throttle.set(0);
+    await falcon9Heavy.control.activateNextStage();
+    await falcon9Heavy.control.activateNextStage();
+    await falcon9Heavy.control.throttle.set(0.1);
+    setTimeout(async function() {
+        await falcon9Heavy.control.throttle.set(0);
+    }, 500);
+}
 // async function stage({ state }) {
 //     let { falcon9Heavy } = state;
 //     await falcon9Heavy.control.activateNextStage();
@@ -103,6 +110,14 @@ function checkAboveAltitude(targetAltitude) {
         return {
             shouldRun: streamUpdate.altitude >= targetAltitude,
             percentage: stepRunner.percentageToTarget(targetAltitude, streamUpdate.altitude)
+        };
+    };
+}
+function checkAboveApoapsis(targetApoapsis) {
+    return function atTargetApoapsis(streamUpdate) {
+        return {
+            shouldRun: streamUpdate.apoapsis >= targetApoapsis,
+            percentage: stepRunner.percentageToTarget(targetApoapsis, streamUpdate.apoapsis)
         };
     };
 }

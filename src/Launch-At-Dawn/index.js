@@ -46,4 +46,6 @@ async function closeClient() {
 async function registerStreams(falcon9Heavy, client) {
     let getAltitudeCall = await falcon9Heavy.flight.surfaceAltitude.get(returnFunctionOptions);
     await client.addStream(getAltitudeCall, 'altitude');
+    let getApoapsisCall = await falcon9Heavy.orbit.apoapsisAltitude.get(returnFunctionOptions);
+    await client.addStream(getApoapsisCall, 'apoapsis');
 }
