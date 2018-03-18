@@ -17,14 +17,15 @@ let stepQueue = [
     throttleUpCentralCore,
     { action: beginBoostBackBurn, condition: delay(6.5, 'seconds') },
     { action: accelerateBoostBackBurn, condition: delay(1.5, 'seconds') },
+    { action: stopBoostBackBurn, condition: checkAboveAltitude(43000) },
     { action: meco, condition: checkAboveApoapsis(100000) },
     { action: secondStageBoost, condition: delay(3, 'seconds') },
     { action: endSecondStageBoost, condition: delay(1, 'seconds') },
     { action: flipCentralCore, condition: delay(1, 'seconds') },
     { action: deployFairings, condition: delay(6, 'seconds') },
-    { action: initiateCircularisationBurn, condition: checkAboveAltitude(94000) },
+    { action: initiateCircularisationBurn, condition: checkAboveAltitude(95000) },
     { action: secondStageEngineCutoff, condition: checkAbovePeriapsis(100000) },
-    { action: done, condition: checkAboveAltitude(100000) }
+    { action: done, condition: delay(1, 'seconds') }
 ];
 
 module.exports = function(client, falcon9Heavy) {
@@ -82,7 +83,7 @@ async function setBoosterAutoPilot({ state, client }) {
     await coreRTLS(falcon9Heavy.rightCore, client);
 }
 
-async function coreRTLS(core, client) {
+async function coreRTLS(core) {
     await core.control.rcs.set(true);
     await core.autoPilot.engage();
     await core.autoPilot.targetPitchAndHeading(0, 270);
@@ -104,6 +105,12 @@ async function accelerateBoostBackBurn({ state, client }) {
     let { falcon9Heavy } = state;
     await fireEngines(falcon9Heavy.leftCore, client, 1);
     await fireEngines(falcon9Heavy.rightCore, client, 1);
+}
+
+async function stopBoostBackBurn({ state, client }) {
+    let { falcon9Heavy } = state;
+    await fireEngines(falcon9Heavy.leftCore, client, 0);
+    await fireEngines(falcon9Heavy.rightCore, client, 0);
 }
 
 async function throttleUpCentralCore({ state, client }) {
@@ -149,7 +156,7 @@ async function initiateCircularisationBurn({ state }) {
 }
 async function secondStageEngineCutoff({ state }) {
     let { falcon9Heavy } = state;
-    await falcon9Heavy.control.throttle.set(1);
+    await falcon9Heavy.control.throttle.set(0);
 }
 
 async function done({ client }) {
