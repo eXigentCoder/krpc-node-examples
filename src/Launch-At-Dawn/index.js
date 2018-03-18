@@ -10,7 +10,6 @@ let _client;
     const client = await createClient();
     try {
         _client = client;
-        await client.send(spaceCenter.quickload());
         const falcon9HeavyRaw = await client.send(spaceCenter.getActiveVessel());
         const falcon9Heavy = await modelBuilder.buildFalcon9OnPad(falcon9HeavyRaw);
         await client.connectToStreamServer();

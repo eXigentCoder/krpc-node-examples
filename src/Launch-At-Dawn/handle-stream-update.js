@@ -3,21 +3,19 @@ const setEngineClusterThrust = require('./set-engine-cluster-thrust');
 const modelBuilder = require('./model-builder');
 const stepRunner = require('./step-runner');
 const returnFunctionOptions = { _fn: true };
-const { spaceCenter } = require('krpc-node');
-const util = require('util');
-const sleep = util.promisify(setTimeout);
+//const { spaceCenter } = require('krpc-node');
 
 let stepQueue = [
-    // throttleDownCentralCore,
-    // launch,
-    // { action: initiateRollManeuver, condition: checkAboveAltitude(150) },
-    // { action: initiateGravityTurn, condition: checkAboveAltitude(2000) },
-    // { action: initiateBoosterSeparation, condition: checkAboveAltitude(25000) },
-    // { action: close, condition: checkAboveAltitude(300000) },
-    stage,
-    initiateBoosterSeparation,
-    { action: done, condition: checkAboveAltitude(25000) }
-    //done
+    throttleDownCentralCore,
+    launch,
+    { action: initiateRollManeuver, condition: checkAboveAltitude(150) },
+    { action: initiateGravityTurn, condition: checkAboveAltitude(2000) },
+    { action: initiateBoosterSeparation, condition: checkAboveAltitude(25000) },
+    { action: close, condition: checkAboveAltitude(300000) },
+    //stage,
+    //initiateBoosterSeparation,
+    //{ action: done, condition: checkAboveAltitude(25000) }
+    done
 ];
 
 module.exports = function(client, falcon9Heavy) {
@@ -27,7 +25,7 @@ module.exports = function(client, falcon9Heavy) {
 
 async function throttleDownCentralCore({ state, client }) {
     let { falcon9Heavy } = state;
-    const callBatch = await setEngineClusterThrust(falcon9Heavy.centerCore.engines, 0.6);
+    const callBatch = await setEngineClusterThrust(falcon9Heavy.centerCore.engines, 0.5);
     callBatch.push(await falcon9Heavy.autoPilot.engage(returnFunctionOptions));
     callBatch.push(
         await falcon9Heavy.autoPilot.targetPitchAndHeading(returnFunctionOptions, 90, 0)
@@ -38,7 +36,6 @@ async function throttleDownCentralCore({ state, client }) {
 
 async function launch({ state }) {
     let { falcon9Heavy } = state;
-    await falcon9Heavy.control.activateNextStage();
     await falcon9Heavy.control.activateNextStage();
 }
 
@@ -76,7 +73,7 @@ async function coreRTLS(core, client) {
     await core.control.rcs.set(true);
     await core.autoPilot.engage();
     await core.autoPilot.targetPitchAndHeading(0, 270);
-    await sleep(fireEngines, 1500);
+    setTimeout(fireEngines, 10000);
 
     async function fireEngines() {
         let calls = await setEngineClusterThrust(core.engines, 1);
@@ -85,10 +82,10 @@ async function coreRTLS(core, client) {
     }
 }
 
-async function stage({ state }) {
-    let { falcon9Heavy } = state;
-    await falcon9Heavy.control.activateNextStage();
-}
+// async function stage({ state }) {
+//     let { falcon9Heavy } = state;
+//     await falcon9Heavy.control.activateNextStage();
+// }
 
 async function close({ client }) {
     console.log('closing');
