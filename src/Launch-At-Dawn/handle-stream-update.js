@@ -63,6 +63,10 @@ async function initiateBoosterSeparation({ state, client }) {
         falcon9Heavy,
         client
     });
+    const leftCore = cores.left;
+    await leftCore.control.rcs.set(true);
+    await leftCore.autoPilot.engage();
+    await leftCore.autoPilot.targetPitchAndHeading(0, 270);
     console.log(cores);
 }
 
