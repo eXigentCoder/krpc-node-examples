@@ -10,7 +10,11 @@ let _client;
     const client = await createClient();
     try {
         _client = client;
-        //await client.send(spaceCenter.quickload());
+        /*
+        01 DevConf FH Pad
+        02 DevConf FH PreSep
+         */
+        await client.send(spaceCenter.load('02 DevConf FH PreSep'));
         const falcon9HeavyRaw = await client.send(spaceCenter.getActiveVessel());
         const falcon9Heavy = await modelBuilder.buildFalcon9OnPad(falcon9HeavyRaw);
         await client.connectToStreamServer();
