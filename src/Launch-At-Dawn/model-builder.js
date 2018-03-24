@@ -31,11 +31,9 @@ async function buildFalcon9OnPad(client) {
         allF9MainFuelTanks,
         allOctawebs
     );
-
     if (currentStage > boosterSeprationStage) {
         await addBoosterCores(falcon9Heavy, allMerlin1dFTEngines, allF9MainFuelTanks, allOctawebs);
     }
-
     return falcon9Heavy;
 }
 

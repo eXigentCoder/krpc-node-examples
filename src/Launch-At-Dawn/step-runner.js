@@ -17,7 +17,7 @@ function runSteps(name, steps, client, state) {
         if (shouldSkip(step)) {
             return;
         }
-        const actionName = step.action.name;
+        const actionName = getActionName(step.action || step);
         if (step.condition) {
             const result = step.condition(streamUpdate);
             if (!result.shouldRun) {
@@ -27,7 +27,13 @@ function runSteps(name, steps, client, state) {
         console.log(`[${name}] :About to run ${actionName}`);
         step.processing = true;
         try {
-            await step.action({ streamUpdate, client, state, step });
+            if (Array.isArray(step.action)) {
+                for (let action of step.action) {
+                    await action({ streamUpdate, client, state, step });
+                }
+            } else {
+                await step.action({ streamUpdate, client, state, step });
+            }
         } catch (err) {
             console.error(`[${name}] :Error on ${actionName}\n${err.message}\n${err.stack}`);
             step.done = true;
@@ -51,27 +57,55 @@ function runSteps(name, steps, client, state) {
         nextLogTimer = moment.utc().add(logInterval.value, logInterval.period);
     }
 }
+function getActionName(action) {
+    if (action.name) {
+        return action.name;
+    }
+    if (Array.isArray(action)) {
+        let names = action.map(fn => fn.name || fn);
+        return JSON.stringify(names);
+    }
+    return 'Unnamed action';
+}
 
 function mapStep(step) {
+    const actionName = getActionName(step.action || step);
     if (typeof step === 'function') {
         return wrapFnStep(step);
     }
     if (typeof step !== 'object') {
-        throw new Error(`Unknown step type :${typeof step}`);
+        throw new Error(`[${actionName}] :Unknown step type :${typeof step}`);
     }
     if (!step.action) {
-        throw new Error('Step.action must be set to a function but was null');
+        throw new Error(`[${actionName}] :Step.action must be set to a function but was null`);
     }
     if (typeof step.action !== 'function') {
-        throw new Error(`Step.action must be a function but was a ${typeof step.condition}`);
+        if (!Array.isArray(step.action)) {
+            throw new Error(
+                `[${actionName}] :Step.action must be a function or array of functions. Type was a ${typeof step.action}`
+            );
+        }
+        step.action.forEach(ensureIsFunction(actionName));
     }
     if (!step.condition) {
         return wrapFnStep(step.action);
     }
     if (typeof step.condition !== 'function') {
-        throw new Error(`step.condition must be a function but was a ${typeof step.condition}`);
+        throw new Error(
+            `[${actionName}] :step.condition must be a function but was a ${typeof step.condition}`
+        );
     }
     return wrapFnStep(step.action, step.condition);
+}
+
+function ensureIsFunction(actionName) {
+    return function ensureIsFunction(item, index) {
+        if (typeof item !== 'function') {
+            throw new Error(
+                `[${actionName}] :Step.action[${index}] must be a function. Type was a ${typeof item}`
+            );
+        }
+    };
 }
 
 function wrapFnStep(action, condition) {
