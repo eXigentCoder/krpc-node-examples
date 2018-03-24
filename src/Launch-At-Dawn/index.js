@@ -6,15 +6,16 @@ const returnFunctionOptions = { _fn: true };
 const handleStreamUpdate = require('./handle-stream-update');
 let _client;
 
+const saveGameNames = {
+    pad: '01 DevConf FH Pad',
+    preSep: '02 DevConf FH PreSep',
+    postSep: '03 DevConf FH PostSep'
+};
 (async function run() {
     const client = await createClient();
     try {
         _client = client;
-        /*
-        01 DevConf FH Pad
-        02 DevConf FH PreSep
-         */
-        await client.send(spaceCenter.load('02 DevConf FH PreSep'));
+        await client.send(spaceCenter.load(saveGameNames.preSep));
         const falcon9Heavy = await modelBuilder.buildFalcon9OnPad(client);
         await client.connectToStreamServer();
         await registerStreams(falcon9Heavy, client);
