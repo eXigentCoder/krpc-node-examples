@@ -4,7 +4,7 @@ let moment = require('moment');
 
 module.exports = { runSteps, percentageToTarget };
 
-function runSteps(steps, client, state) {
+function runSteps(name, steps, client, state) {
     let stepQueue = _.reverse(steps);
     stepQueue = stepQueue.map(mapStep);
     let step = stepQueue.pop();
@@ -24,25 +24,25 @@ function runSteps(steps, client, state) {
                 return logProgressToCondition(actionName, result.percentage);
             }
         }
-        console.log(`[StepRunner] :About to run ${actionName}`);
+        console.log(`[${name}] :About to run ${actionName}`);
         step.processing = true;
         try {
             await step.action({ streamUpdate, client, state, step });
         } catch (err) {
-            console.error(`[StepRunner] :Error on ${actionName}\n${err.message}\n${err.stack}`);
+            console.error(`[${name}] :Error on ${actionName}\n${err.message}\n${err.stack}`);
             step.done = true;
             await client.close();
             // eslint-disable-next-line no-process-exit
             process.exit(-1);
         }
         step.done = true;
-        console.log(`[StepRunner] :Done with ${actionName}`);
+        console.log(`[${name}] :Done with ${actionName}`);
         step = stepQueue.pop();
     };
 
     function logProgressToCondition(actionName, percentageToTarget) {
         if (moment.utc().isAfter(nextLogTimer)) {
-            console.log(`[StepRunner] :${actionName} waiting ${percentageToTarget}`);
+            console.log(`[${name}] :${actionName} waiting ${percentageToTarget}`);
             incrementNextLogTimer();
         }
     }
@@ -84,7 +84,7 @@ function wrapFnStep(action, condition) {
 }
 
 function shouldSkip(step) {
-    return step.done || step.processing;
+    return !step || step.done || step.processing;
 }
 
 function percentageToTarget(target, current) {

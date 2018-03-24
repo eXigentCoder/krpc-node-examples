@@ -3,39 +3,66 @@ const setEngineClusterThrust = require('./set-engine-cluster-thrust');
 const modelBuilder = require('./model-builder');
 const stepRunner = require('./step-runner');
 const returnFunctionOptions = { _fn: true };
-//const { spaceCenter } = require('krpc-node');
-const moment = require('moment');
+const boosterStreamUpdate = require('./booster-stream-update');
+const displayMessage = require('./steps/display-message');
+const delay = require('./conditions/delay');
 
 let stepQueue = [
+    /*--====[ 01 DevConf FH Pad ]====--*/
     // throttleDownCentralCore,
-    // //todo UI countdown
-    // launch,
+    // { action: displayMessage('T-10 ...'), condition: delay(1, 'seconds') },
+    // { action: displayMessage('T-9 ...'), condition: delay(1, 'seconds') },
+    // { action: displayMessage('T-8 ...'), condition: delay(1, 'seconds') },
+    // { action: displayMessage('T-7 ...'), condition: delay(1, 'seconds') },
+    // { action: displayMessage('T-6 ...'), condition: delay(1, 'seconds') },
+    // {
+    //     action: displayMessage('Booster Ignition Sequence Start', 1),
+    //     condition: delay(1, 'seconds')
+    // },
+    // activateNextStage,
+    // { action: displayMessage('T-4 ...'), condition: delay(1, 'seconds') },
+    // { action: displayMessage('Core Ignition Sequence Start'), condition: delay(1, 'seconds') },
+    // activateNextStage,
+    // { action: displayMessage('T-2 ...'), condition: delay(1, 'seconds') },
+    // { action: displayMessage('T-1 ...'), condition: delay(1, 'seconds') },
+    // { action: displayMessage('Launch!!'), condition: delay(1, 'seconds') },
+    // activateNextStage,
     // { action: initiateRollManeuver, condition: checkAboveAltitude(150) },
+    // { action: displayMessage('Beginning roll program.', 3), condition: checkAboveAltitude(150) },
     // { action: setSasToPrograde, condition: checkAboveAltitude(2400) },
-    { action: initiateBoosterSeparation, condition: checkAboveAltitude(25000) },
-    //todo target LZ rather
-    setBoosterAutoPilot,
-    throttleUpCentralCore,
+    // { action: displayMessage('Gravity turn initiated.', 3), condition: checkAboveAltitude(2400) },
+    /*--====[ Comment out before here when loading from 02 DevConf FH PreSep ]====--*/
+    { action: boosterEngineCutOff, condition: checkAboveAltitude(24000) },
+    {
+        action: displayMessage('BECO - Booster Engine Cutoff', 3),
+        condition: checkAboveAltitude(24000)
+    },
 
-    { action: accelerateBoostBackBurn(0.2), condition: delay(9.5, 'seconds') },
-    setPitchToZero,
-    { action: accelerateBoostBackBurn(0.4), condition: delay(4, 'seconds') },
-    { action: accelerateBoostBackBurn(1), condition: delay(2, 'seconds') },
-    { action: setBoosterSasModeToStability, condition: delay(7, 'seconds') },
-    { action: meco, condition: checkAboveApoapsis(120000) },
-    setSasToPrograde,
-    { action: secondStageBoost, condition: delay(3, 'seconds') },
-    { action: endSecondStageBoost, condition: delay(1, 'seconds') },
-    { action: flipCentralCore, condition: delay(1, 'seconds') },
-    { action: deployFairings, condition: delay(14, 'seconds') },
-    { action: initiateCircularisationBurn, condition: checkAboveAltitude(119700) },
-    { action: secondStageEngineCutoff, condition: checkAbovePeriapsis(120000) },
-    { action: done, condition: delay(1, 'seconds') }
+    { action: initiateBoosterSeparation, condition: checkAboveAltitude(25000) },
+    {
+        action: displayMessage('Booster separation.', 3),
+        condition: checkAboveAltitude(25000)
+    },
+    startBoosterSteps,
+    //displayMessage('Central core is at full thrust.', 3),
+    // throttleUpCentralCore,
+    // setPitchToZero,
+    // { action: displayMessage('MECO', 3), condition: checkAboveApoapsis(120000) },
+    // { action: meco, condition: checkAboveApoapsis(120000) },
+    // setSasToPrograde,
+    // { action: secondStageBoost, condition: delay(3, 'seconds') },
+    // { action: endSecondStageBoost, condition: delay(0.6, 'seconds') },
+    // displayMessage('Central core rotating retrograde for deceleration burn.', 3),
+    // { action: flipCentralCore, condition: delay(1, 'seconds') },
+    // { action: deployFairings, condition: delay(14, 'seconds') },
+    // { action: initiateCircularisationBurn, condition: checkAboveAltitude(119700) },
+    // { action: secondStageEngineCutoff, condition: checkAbovePeriapsis(120000) },
+    { action: done, condition: delay(120, 'seconds') }
 ];
 
 module.exports = function(client, falcon9Heavy) {
     let state = { falcon9Heavy };
-    return stepRunner.runSteps(stepQueue, client, state);
+    return stepRunner.runSteps('CoreSteps', stepQueue, client, state);
 };
 
 async function throttleDownCentralCore({ state, client }) {
@@ -49,7 +76,7 @@ async function throttleDownCentralCore({ state, client }) {
     await client.send(callBatch);
 }
 
-async function launch({ state }) {
+async function activateNextStage({ state }) {
     let { falcon9Heavy } = state;
     await falcon9Heavy.control.activateNextStage();
 }
@@ -67,6 +94,12 @@ async function setSasToPrograde({ state }) {
     await falcon9Heavy.control.sas.set(true);
     await falcon9Heavy.control.sasMode.set('Prograde');
 }
+async function boosterEngineCutOff({ state, client }) {
+    let { falcon9Heavy } = state;
+    let calls = await setEngineClusterThrust(falcon9Heavy.leftCore.engines, 0);
+    calls = calls.concat(await setEngineClusterThrust(falcon9Heavy.rightCore.engines, 0));
+    await client.send(calls);
+}
 
 async function initiateBoosterSeparation({ state, client }) {
     let { falcon9Heavy } = state;
@@ -83,36 +116,8 @@ async function initiateBoosterSeparation({ state, client }) {
     Object.assign(falcon9Heavy.rightCore, cores.right);
 }
 
-async function setBoosterAutoPilot({ state }) {
-    let { falcon9Heavy } = state;
-    await coreRTLS(falcon9Heavy.leftCore);
-    await coreRTLS(falcon9Heavy.rightCore);
-}
-
-async function coreRTLS(core) {
-    await core.control.rcs.set(true);
-    await core.control.sas.set(true);
-    await core.control.sasMode.set('Retrograde');
-}
-
-async function fireEngines(core, client, thrust) {
-    let calls = await setEngineClusterThrust(core.engines, 0.5);
-    calls = calls.concat(await core.control.throttle.set(returnFunctionOptions, thrust));
-    await client.send(calls);
-}
-
-function accelerateBoostBackBurn(throttle) {
-    return async function _accelerateBoostBackBurn({ state, client }) {
-        let { falcon9Heavy } = state;
-        await fireEngines(falcon9Heavy.leftCore, client, throttle);
-        await fireEngines(falcon9Heavy.rightCore, client, throttle);
-    };
-}
-
-async function setBoosterSasModeToStability({ state }) {
-    let { falcon9Heavy } = state;
-    await falcon9Heavy.leftCore.control.sasMode.set('StabilityAssist');
-    await falcon9Heavy.rightCore.control.sasMode.set('StabilityAssist');
+async function startBoosterSteps({ client, state }) {
+    client.stream.on('message', boosterStreamUpdate(client, state));
 }
 
 async function throttleUpCentralCore({ state, client }) {
@@ -157,6 +162,7 @@ async function flipCentralCore({ state }) {
 async function deployFairings({ state }) {
     let { falcon9Heavy } = state;
     await falcon9Heavy.control.activateNextStage();
+    await falcon9Heavy.control.rcs.set(true);
 }
 
 async function initiateCircularisationBurn({ state }) {
@@ -197,16 +203,6 @@ function checkAbovePeriapsis(targetPeriapsis) {
         return {
             shouldRun: streamUpdate.periapsis >= targetPeriapsis,
             percentage: stepRunner.percentageToTarget(targetPeriapsis, streamUpdate.periapsis)
-        };
-    };
-}
-function delay(value, period) {
-    let runAt;
-    return function atTargetApoapsis() {
-        runAt = runAt || moment.utc().add(value, period);
-        return {
-            shouldRun: moment.utc().isAfter(runAt),
-            percentage: runAt.fromNow()
         };
     };
 }
