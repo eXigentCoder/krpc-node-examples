@@ -9,13 +9,15 @@ let _client;
 const saveGameNames = {
     pad: '01 DevConf FH Pad',
     preSep: '02 DevConf FH PreSep',
-    postSep: '03 DevConf FH PostSep'
+    postSep: '03 DevConf FH PostSep',
+    preOrbit: '04 DevConf FH PreOrbit',
+    inOrbit: '05 DevConf FH InOrbit'
 };
 (async function run() {
     const client = await createClient();
     try {
         _client = client;
-        await client.send(spaceCenter.load(saveGameNames.preSep));
+        await client.send(spaceCenter.load(saveGameNames.postSep));
         const falcon9Heavy = await modelBuilder.buildFalcon9OnPad(client);
         await client.connectToStreamServer();
         await registerStreams(falcon9Heavy, client);

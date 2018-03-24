@@ -3,13 +3,12 @@ const setEngineClusterThrust = require('./set-engine-cluster-thrust');
 const modelBuilder = require('./model-builder');
 const stepRunner = require('./step-runner');
 //const returnFunctionOptions = { _fn: true };
-//const boosterStreamUpdate = require('./booster-stream-update');
+const boosterStreamUpdate = require('./booster-stream-update');
 const displayMessage = require('./steps/display-message');
 const delay = require('./conditions/delay');
 const rollAltitude = 150;
 const gravityTurnAltitude = 1300;
 const becoAltitude = 30000;
-const boosterSeparationAltitude = becoAltitude + 1000;
 const mecoAltitude = 120000;
 let stepQueue = [
     /*--====[ 01 DevConf FH Pad ]====--*/
@@ -46,32 +45,34 @@ let stepQueue = [
     //     condition: checkAboveAltitude(gravityTurnAltitude)
     // },
     /*--====[ 02 DevConf FH PreSep ]====--*/
-    {
-        action: [setBoosterThrust(0), displayMessage('BECO - Booster Engine Cutoff', 3)],
-        condition: checkAboveAltitude(becoAltitude)
-    },
-    {
-        action: [initiateBoosterSeparation, displayMessage('Booster separation.', 3)],
-        condition: checkAboveAltitude(boosterSeparationAltitude)
-    },
-    setThrottle(0),
-    setBoosterThrust(1)
-    //startBoosterSteps,
-    // displayMessage('Central core is at full thrust.', 3),
+    // {
+    //     action: [setBoosterThrust(0), displayMessage('BECO - Booster Engine Cutoff', 3)],
+    //     condition: checkAboveAltitude(becoAltitude)
+    // },
+    // {
+    //     action: [initiateBoosterSeparation, displayMessage('Booster separation.', 3)],
+    //     condition: delay(1, 'second')
+    // },
+    // //startBoosterSteps,
     // setCentralCoreThrust(1),
-    // /*--====[ 03 DevConf FH PostSep ]====--*/
-    // targetPitchAndHeading(0, 90),
-    // { action: displayMessage('MECO', 3), condition: checkAboveApoapsis(mecoAltitude) },
-    // { action: setThrottle(0), condition: checkAboveApoapsis(mecoAltitude) },
-    // setSasToPrograde,
-    // { action: secondStageBoost, condition: delay(3, 'seconds') },
-    // { action: endSecondStageBoost, condition: delay(0.6, 'seconds') },
-    // displayMessage('Central core rotating retrograde for deceleration burn.', 3),
-    // { action: flipCentralCore, condition: delay(1, 'seconds') },
-    // { action: deployFairings, condition: delay(14, 'seconds') },
-    // { action: initiateCircularisationBurn, condition: checkAboveAltitude(119700) },
-    // { action: secondStageEngineCutoff, condition: checkAbovePeriapsis(120000) },
-    // { action: done, condition: delay(120, 'seconds') }
+    // displayMessage('Central core is at full thrust.', 3),
+    /*--====[ 03 DevConf FH PostSep ]====--*/
+    targetPitchAndHeading(0, 90),
+    {
+        action: [displayMessage('MECO', 3), setThrottle(0), setSasToPrograde],
+        condition: checkAboveApoapsis(mecoAltitude)
+    },
+    activateNextStage, // separation
+    activateNextStage, // engine
+    { action: setRCSForward(1), condition: delay(3, 'seconds') },
+    { action: setRCSForward(0), condition: delay(2, 'seconds') },
+    displayMessage('Central core rotating retrograde for deceleration burn.', 3),
+    { action: flipCentralCore, condition: delay(1, 'seconds') },
+    { action: deployFairings, condition: delay(14, 'seconds') },
+    /*--====[ 04 DevConf FH PreOrbit ]====--*/
+    { action: initiateCircularisationBurn, condition: checkAboveAltitude(119700) },
+    { action: secondStageEngineCutoff, condition: checkAbovePeriapsis(120000) },
+    { action: done, condition: delay(120, 'seconds') }
 ];
 
 module.exports = function(client, falcon9Heavy) {
@@ -117,10 +118,11 @@ async function setSasToPrograde({ state }) {
     let { falcon9Heavy } = state;
     await falcon9Heavy.autoPilot.disengage();
     await falcon9Heavy.control.sas.set(true);
+    await falcon9Heavy.control.rcs.set(true);
     await falcon9Heavy.control.sasMode.set('Prograde');
 }
 
-async function setBoosterThrust(thrust) {
+function setBoosterThrust(thrust) {
     return async function _setBoosterThrust({ state, client }) {
         let { falcon9Heavy } = state;
         let calls = await setEngineClusterThrust(falcon9Heavy.leftCore.engines, thrust);
@@ -148,16 +150,11 @@ async function startBoosterSteps({ client, state }) {
     client.stream.on('message', boosterStreamUpdate(client, state));
 }
 
-async function secondStageBoost({ state }) {
-    let { falcon9Heavy } = state;
-    await falcon9Heavy.control.activateNextStage();
-    await falcon9Heavy.control.activateNextStage();
-    //todo RK use RCS for this
-    await falcon9Heavy.control.throttle.set(0.1);
-}
-async function endSecondStageBoost({ state }) {
-    let { falcon9Heavy } = state;
-    await falcon9Heavy.control.throttle.set(0);
+function setRCSForward(value) {
+    return async function secondStageBoost({ state }) {
+        let { falcon9Heavy } = state;
+        await falcon9Heavy.control.forward.set(value);
+    };
 }
 
 async function flipCentralCore({ state }) {
