@@ -15,8 +15,7 @@ let _client;
         02 DevConf FH PreSep
          */
         await client.send(spaceCenter.load('02 DevConf FH PreSep'));
-        const falcon9HeavyRaw = await client.send(spaceCenter.getActiveVessel());
-        const falcon9Heavy = await modelBuilder.buildFalcon9OnPad(falcon9HeavyRaw);
+        const falcon9Heavy = await modelBuilder.buildFalcon9OnPad(client);
         await client.connectToStreamServer();
         await registerStreams(falcon9Heavy, client);
         client.stream.on('message', handleStreamUpdate(client, falcon9Heavy));

@@ -43,20 +43,20 @@ let stepQueue = [
         action: displayMessage('Booster separation.', 3),
         condition: checkAboveAltitude(25000)
     },
-    startBoosterSteps,
-    //displayMessage('Central core is at full thrust.', 3),
-    // throttleUpCentralCore,
-    // setPitchToZero,
-    // { action: displayMessage('MECO', 3), condition: checkAboveApoapsis(120000) },
-    // { action: meco, condition: checkAboveApoapsis(120000) },
-    // setSasToPrograde,
-    // { action: secondStageBoost, condition: delay(3, 'seconds') },
-    // { action: endSecondStageBoost, condition: delay(0.6, 'seconds') },
-    // displayMessage('Central core rotating retrograde for deceleration burn.', 3),
-    // { action: flipCentralCore, condition: delay(1, 'seconds') },
-    // { action: deployFairings, condition: delay(14, 'seconds') },
-    // { action: initiateCircularisationBurn, condition: checkAboveAltitude(119700) },
-    // { action: secondStageEngineCutoff, condition: checkAbovePeriapsis(120000) },
+    //startBoosterSteps,
+    displayMessage('Central core is at full thrust.', 3),
+    throttleUpCentralCore,
+    setPitchToZero,
+    { action: displayMessage('MECO', 3), condition: checkAboveApoapsis(120000) },
+    { action: meco, condition: checkAboveApoapsis(120000) },
+    setSasToPrograde,
+    { action: secondStageBoost, condition: delay(3, 'seconds') },
+    { action: endSecondStageBoost, condition: delay(0.6, 'seconds') },
+    displayMessage('Central core rotating retrograde for deceleration burn.', 3),
+    { action: flipCentralCore, condition: delay(1, 'seconds') },
+    { action: deployFairings, condition: delay(14, 'seconds') },
+    { action: initiateCircularisationBurn, condition: checkAboveAltitude(119700) },
+    { action: secondStageEngineCutoff, condition: checkAbovePeriapsis(120000) },
     { action: done, condition: delay(120, 'seconds') }
 ];
 
@@ -107,6 +107,7 @@ async function initiateBoosterSeparation({ state, client }) {
     calls = calls.concat(await setEngineClusterThrust(falcon9Heavy.rightCore.engines, 0));
     await client.send(calls);
     await falcon9Heavy.control.activateNextStage();
+
 
     const cores = await modelBuilder.buildBoosterCoresPostSeparation({
         falcon9Heavy,

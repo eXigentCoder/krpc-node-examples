@@ -1,8 +1,14 @@
 'use strict';
 
 const _ = require('lodash');
-const returnFunctionOptions = { _fn: true };
+//const returnFunctionOptions = { _fn: true };
 const { spaceCenter } = require('krpc-node');
+const boosterSeprationStage = 6;
+//const secondStageSeparation = 5;
+const interStageTitle = 'Falcon 9 1.1 FT Interstage';
+const fuelTankTitle = 'Falcon 9 1.1 FT Main Fuel Tank';
+const octawebTitle = 'Falcon 9 Octaweb';
+const merlin1dEngineTitle = 'SpaceX Merlin 1D Full Thrust';
 
 module.exports = {
     buildFalcon9OnPad,
@@ -10,15 +16,63 @@ module.exports = {
     buildCentralCoreAfterSeparation
 };
 
-async function buildFalcon9OnPad(falcon9Heavy) {
-    const interStageTitle = 'Falcon 9 1.1 FT Interstage';
-    const fuelTankTitle = 'Falcon 9 1.1 FT Main Fuel Tank';
-    const octawebTitle = 'Falcon 9 Octaweb';
-    const merlin1dEngineTitle = 'SpaceX Merlin 1D Full Thrust';
-    const parts = await falcon9Heavy.parts.get();
+async function buildFalcon9OnPad(client) {
+    const vessel = await client.send(spaceCenter.getActiveVessel());
+    const falcon9Heavy = await buildControllableVessel(vessel);
+    await addSurfaceFlightAndOrbit(falcon9Heavy);
+    const currentStage = await falcon9Heavy.control.currentStage.get();
+    const parts = await falcon9Heavy._raw.parts.get();
     const allMerlin1dFTEngines = await parts.withTitle(merlin1dEngineTitle);
     const allF9MainFuelTanks = await parts.withTitle(fuelTankTitle);
     const allOctawebs = await parts.withTitle(octawebTitle);
+    falcon9Heavy.centerCore = await addCentralCore(
+        parts,
+        allMerlin1dFTEngines,
+        allF9MainFuelTanks,
+        allOctawebs
+    );
+
+    if (currentStage > boosterSeprationStage) {
+        await addBoosterCores(falcon9Heavy, allMerlin1dFTEngines, allF9MainFuelTanks, allOctawebs);
+    }
+
+    return falcon9Heavy;
+}
+
+async function addBoosterCores(
+    falcon9Heavy,
+    allMerlin1dFTEngines,
+    allF9MainFuelTanks,
+    allOctawebs
+) {
+    /* Left and right are orientated towards the camera in locked mode*/
+    const otherTanks = nOrError(
+        2,
+        _.differenceBy(allF9MainFuelTanks, [falcon9Heavy.centerCore.fuelTank], byId)
+    );
+    const leftTank = otherTanks[0];
+    const leftEngines = await getEnginesForF9MainFuelTank(
+        allMerlin1dFTEngines,
+        allOctawebs,
+        leftTank
+    );
+    falcon9Heavy.leftCore = {
+        fuelTank: leftTank,
+        engines: leftEngines
+    };
+    const rightTank = otherTanks[1];
+    const rightEngines = await getEnginesForF9MainFuelTank(
+        allMerlin1dFTEngines,
+        allOctawebs,
+        rightTank
+    );
+    falcon9Heavy.rightCore = {
+        fuelTank: rightTank,
+        engines: rightEngines
+    };
+}
+
+async function addCentralCore(parts, allMerlin1dFTEngines, allF9MainFuelTanks, allOctawebs) {
     let interstage = oneOrError(await parts.withTitle(interStageTitle));
     let interstageChildren = await interstage.children.get();
     const centralTank = oneOrError(_.intersectionBy(interstageChildren, allF9MainFuelTanks, byId));
@@ -27,43 +81,9 @@ async function buildFalcon9OnPad(falcon9Heavy) {
         allOctawebs,
         centralTank
     );
-    const otherTanks = nOrError(2, _.differenceBy(allF9MainFuelTanks, [centralTank], byId));
-    const leftTank = otherTanks[0];
-    const rightTank = otherTanks[1];
-    const leftEngines = await getEnginesForF9MainFuelTank(
-        allMerlin1dFTEngines,
-        allOctawebs,
-        leftTank
-    );
-    const rightEngines = await getEnginesForF9MainFuelTank(
-        allMerlin1dFTEngines,
-        allOctawebs,
-        rightTank
-    );
-    const control = await falcon9Heavy.control.get();
-    const autoPilot = await falcon9Heavy.autoPilot.get();
-    const surfaceReference = await falcon9Heavy.surfaceReferenceFrame.get();
-    const flight = await falcon9Heavy.flight(surfaceReference);
-    const orbit = await falcon9Heavy.orbit.get();
-    /* Left and right are orientated towards the camera in locked mode*/
     return {
-        _raw: falcon9Heavy,
-        control,
-        autoPilot,
-        flight,
-        orbit,
-        leftCore: {
-            fuelTank: leftTank,
-            engines: leftEngines
-        },
-        centerCore: {
-            fuelTank: centralTank,
-            engines: centralEngines
-        },
-        rightCore: {
-            fuelTank: rightTank,
-            engines: rightEngines
-        }
+        fuelTank: centralTank,
+        engines: centralEngines
     };
 }
 
@@ -96,15 +116,15 @@ async function buildBoosterCoresPostSeparation({ falcon9Heavy, client }) {
             continue;
         }
         if (!cores.right) {
-            cores.right = await buildSideCore(vessel, client);
+            cores.right = await buildControllableVessel(vessel, client);
             continue;
         }
-        cores.left = await buildSideCore(vessel, client);
+        cores.left = await buildControllableVessel(vessel, client);
     }
     return cores;
 }
 
-async function buildSideCore(vessel) {
+async function buildControllableVessel(vessel) {
     const autoPilot = await vessel.autoPilot.get();
     const control = await vessel.control.get();
     return {
@@ -112,6 +132,13 @@ async function buildSideCore(vessel) {
         autoPilot,
         control
     };
+}
+
+async function addSurfaceFlightAndOrbit(falcon9Heavy) {
+    const surfaceReference = await falcon9Heavy._raw.surfaceReferenceFrame.get();
+    falcon9Heavy.flight = await falcon9Heavy._raw.flight(surfaceReference);
+    falcon9Heavy.orbit = await falcon9Heavy._raw.orbit.get();
+    return falcon9Heavy;
 }
 
 async function buildCentralCoreAfterSeparation(vessel) {
