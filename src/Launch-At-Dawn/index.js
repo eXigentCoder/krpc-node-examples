@@ -17,7 +17,7 @@ const saveGameNames = {
     const client = await createClient();
     try {
         _client = client;
-        await client.send(spaceCenter.load(saveGameNames.pad));
+        await client.send(spaceCenter.load(saveGameNames.preSep));
         const falcon9Heavy = await modelBuilder.buildFalcon9OnPad(client);
         await client.connectToStreamServer();
         await registerStreams(falcon9Heavy, client);

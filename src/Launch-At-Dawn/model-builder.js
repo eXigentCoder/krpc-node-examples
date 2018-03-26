@@ -19,14 +19,14 @@ module.exports = {
 async function buildFalcon9OnPad(client) {
     const vessel = await client.send(spaceCenter.getActiveVessel());
     const falcon9Heavy = await buildControllableVessel(vessel);
-    await addSurfaceFlightAndOrbit(falcon9Heavy);
+    await addSurfaceOrbit(falcon9Heavy);
     const currentStage = await falcon9Heavy.control.currentStage.get();
-    const parts = await falcon9Heavy._raw.parts.get();
-    const allMerlin1dFTEngines = await parts.withTitle(merlin1dEngineTitle);
-    const allF9MainFuelTanks = await parts.withTitle(fuelTankTitle);
-    const allOctawebs = await parts.withTitle(octawebTitle);
+
+    const allMerlin1dFTEngines = await falcon9Heavy.parts.withTitle(merlin1dEngineTitle);
+    const allF9MainFuelTanks = await falcon9Heavy.parts.withTitle(fuelTankTitle);
+    const allOctawebs = await falcon9Heavy.parts.withTitle(octawebTitle);
     falcon9Heavy.centerCore = await addCentralCore(
-        parts,
+        falcon9Heavy.parts,
         allMerlin1dFTEngines,
         allF9MainFuelTanks,
         allOctawebs
@@ -125,16 +125,19 @@ async function buildBoosterCoresPostSeparation({ falcon9Heavy, client }) {
 async function buildControllableVessel(vessel) {
     const autoPilot = await vessel.autoPilot.get();
     const control = await vessel.control.get();
+    const surfaceReference = await vessel.surfaceReferenceFrame.get();
+    const flight = await vessel.flight(surfaceReference);
+    const parts = await vessel.parts.get();
     return {
         _raw: vessel,
         autoPilot,
-        control
+        control,
+        flight,
+        parts
     };
 }
 
-async function addSurfaceFlightAndOrbit(falcon9Heavy) {
-    const surfaceReference = await falcon9Heavy._raw.surfaceReferenceFrame.get();
-    falcon9Heavy.flight = await falcon9Heavy._raw.flight(surfaceReference);
+async function addSurfaceOrbit(falcon9Heavy) {
     falcon9Heavy.orbit = await falcon9Heavy._raw.orbit.get();
     return falcon9Heavy;
 }
@@ -148,6 +151,7 @@ async function buildCentralCoreAfterSeparation(vessel) {
         control
     };
 }
+
 function oneOrError(arr) {
     return nOrError(1, arr);
 }
