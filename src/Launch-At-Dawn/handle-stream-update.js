@@ -17,38 +17,38 @@ const becoAltitude = 30000;
 const mecoAltitude = 120000;
 let stepQueue = [
     /*--====[ 01 DevConf FH Pad ]====--*/
-    // setCentralCoreThrust(0.55),
-    // targetPitchAndHeading(90, 0),
-    // setThrottle(1),
-    // { action: displayMessage('T-10 ...'), condition: delay(1, 'seconds') },
-    // { action: displayMessage('T-9 ...'), condition: delay(1, 'seconds') },
-    // { action: displayMessage('T-8 ...'), condition: delay(1, 'seconds') },
-    // { action: displayMessage('T-7 ...'), condition: delay(1, 'seconds') },
-    // { action: displayMessage('T-6 ...'), condition: delay(1, 'seconds') },
-    // {
-    //     action: [activateNextStage, displayMessage('Booster Ignition Sequence Start', 1)],
-    //     condition: delay(1, 'seconds')
-    // },
-    // { action: displayMessage('T-4 ...'), condition: delay(1, 'seconds') },
-    // {
-    //     action: [activateNextStage, displayMessage('Core Ignition Sequence Start')],
-    //     condition: delay(1, 'seconds')
-    // },
-    // { action: displayMessage('T-2 ...'), condition: delay(1, 'seconds') },
-    // { action: displayMessage('T-1 ...'), condition: delay(1, 'seconds') },
-    // { action: [activateNextStage, displayMessage('Launch!!')], condition: delay(1, 'seconds') },
-    // {
-    //     action: [setRoll(0), targetPitchAndHeading(85, 93)],
-    //     condition: checkAbove('altitude', rollAltitude)
-    // },
-    // {
-    //     action: displayMessage('Beginning roll program.', 3),
-    //     condition: checkAbove('altitude', rollAltitude)
-    // },
-    // {
-    //     action: [setSasToPrograde, displayMessage('Gravity turn initiated.', 3)],
-    //     condition: checkAbove('altitude', gravityTurnAltitude)
-    // },
+    setCentralCoreThrust(0.55),
+    targetPitchAndHeading(90, 0),
+    setThrottle(1),
+    { action: displayMessage('T-10 ...'), condition: delay(1, 'seconds') },
+    { action: displayMessage('T-9 ...'), condition: delay(1, 'seconds') },
+    { action: displayMessage('T-8 ...'), condition: delay(1, 'seconds') },
+    { action: displayMessage('T-7 ...'), condition: delay(1, 'seconds') },
+    { action: displayMessage('T-6 ...'), condition: delay(1, 'seconds') },
+    {
+        action: [activateNextStage, displayMessage('Booster Ignition Sequence Start', 1)],
+        condition: delay(1, 'seconds')
+    },
+    { action: displayMessage('T-4 ...'), condition: delay(1, 'seconds') },
+    {
+        action: [activateNextStage, displayMessage('Core Ignition Sequence Start')],
+        condition: delay(1, 'seconds')
+    },
+    { action: displayMessage('T-2 ...'), condition: delay(1, 'seconds') },
+    { action: displayMessage('T-1 ...'), condition: delay(1, 'seconds') },
+    { action: [activateNextStage, displayMessage('Launch!!')], condition: delay(1, 'seconds') },
+    {
+        action: [setRoll(0), targetPitchAndHeading(85, 93)],
+        condition: checkAbove('altitude', rollAltitude)
+    },
+    {
+        action: displayMessage('Beginning roll program.', 3),
+        condition: checkAbove('altitude', rollAltitude)
+    },
+    {
+        action: [setSasToPrograde, displayMessage('Gravity turn initiated.', 3)],
+        condition: checkAbove('altitude', gravityTurnAltitude)
+    },
     /*--====[ 02 DevConf FH PreSep ]====--*/
     {
         action: [setBoosterThrust(0), displayMessage('BECO - Booster Engine Cutoff', 3)],
