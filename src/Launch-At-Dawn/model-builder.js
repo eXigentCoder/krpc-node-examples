@@ -143,13 +143,7 @@ async function addSurfaceOrbit(falcon9Heavy) {
 }
 
 async function buildCentralCoreAfterSeparation(vessel) {
-    const autoPilot = await vessel.autoPilot.get();
-    const control = await vessel.control.get();
-    return {
-        _raw: vessel,
-        autoPilot,
-        control
-    };
+    return buildControllableVessel(vessel);
 }
 
 function oneOrError(arr) {

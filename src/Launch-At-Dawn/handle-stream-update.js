@@ -2,8 +2,6 @@
 const setEngineClusterThrust = require('./set-engine-cluster-thrust');
 const modelBuilder = require('./model-builder');
 const stepRunner = require('./step-runner');
-const leftBoosterStreamUpdate = require('./left-booster-stream-update');
-const rightBoosterStreamUpdate = require('./right-booster-stream-update');
 const displayMessage = require('./steps/display-message');
 const targetPitchAndHeading = require('./steps/target-pitch-and-heading');
 const setThrottle = require('./steps/set-throttle');
@@ -19,38 +17,38 @@ const becoAltitude = 30000;
 const mecoAltitude = 120000;
 let stepQueue = [
     /*--====[ 01 DevConf FH Pad ]====--*/
-    setCentralCoreThrust(0.55),
-    targetPitchAndHeading(90, 0),
-    setThrottle(1),
-    { action: displayMessage('T-10 ...'), condition: delay(1, 'seconds') },
-    { action: displayMessage('T-9 ...'), condition: delay(1, 'seconds') },
-    { action: displayMessage('T-8 ...'), condition: delay(1, 'seconds') },
-    { action: displayMessage('T-7 ...'), condition: delay(1, 'seconds') },
-    { action: displayMessage('T-6 ...'), condition: delay(1, 'seconds') },
-    {
-        action: [activateNextStage, displayMessage('Booster Ignition Sequence Start', 1)],
-        condition: delay(1, 'seconds')
-    },
-    { action: displayMessage('T-4 ...'), condition: delay(1, 'seconds') },
-    {
-        action: [activateNextStage, displayMessage('Core Ignition Sequence Start')],
-        condition: delay(1, 'seconds')
-    },
-    { action: displayMessage('T-2 ...'), condition: delay(1, 'seconds') },
-    { action: displayMessage('T-1 ...'), condition: delay(1, 'seconds') },
-    { action: [activateNextStage, displayMessage('Launch!!')], condition: delay(1, 'seconds') },
-    {
-        action: [setRoll(0), targetPitchAndHeading(85, 93)],
-        condition: checkAbove('altitude', rollAltitude)
-    },
-    {
-        action: displayMessage('Beginning roll program.', 3),
-        condition: checkAbove('altitude', rollAltitude)
-    },
-    {
-        action: [setSasToPrograde, displayMessage('Gravity turn initiated.', 3)],
-        condition: checkAbove('altitude', gravityTurnAltitude)
-    },
+    // setCentralCoreThrust(0.55),
+    // targetPitchAndHeading(90, 0),
+    // setThrottle(1),
+    // { action: displayMessage('T-10 ...'), condition: delay(1, 'seconds') },
+    // { action: displayMessage('T-9 ...'), condition: delay(1, 'seconds') },
+    // { action: displayMessage('T-8 ...'), condition: delay(1, 'seconds') },
+    // { action: displayMessage('T-7 ...'), condition: delay(1, 'seconds') },
+    // { action: displayMessage('T-6 ...'), condition: delay(1, 'seconds') },
+    // {
+    //     action: [activateNextStage, displayMessage('Booster Ignition Sequence Start', 1)],
+    //     condition: delay(1, 'seconds')
+    // },
+    // { action: displayMessage('T-4 ...'), condition: delay(1, 'seconds') },
+    // {
+    //     action: [activateNextStage, displayMessage('Core Ignition Sequence Start')],
+    //     condition: delay(1, 'seconds')
+    // },
+    // { action: displayMessage('T-2 ...'), condition: delay(1, 'seconds') },
+    // { action: displayMessage('T-1 ...'), condition: delay(1, 'seconds') },
+    // { action: [activateNextStage, displayMessage('Launch!!')], condition: delay(1, 'seconds') },
+    // {
+    //     action: [setRoll(0), targetPitchAndHeading(85, 93)],
+    //     condition: checkAbove('altitude', rollAltitude)
+    // },
+    // {
+    //     action: displayMessage('Beginning roll program.', 3),
+    //     condition: checkAbove('altitude', rollAltitude)
+    // },
+    // {
+    //     action: [setSasToPrograde, displayMessage('Gravity turn initiated.', 3)],
+    //     condition: checkAbove('altitude', gravityTurnAltitude)
+    // },
     /*--====[ 02 DevConf FH PreSep ]====--*/
     {
         action: [setBoosterThrust(0), displayMessage('BECO - Booster Engine Cutoff', 3)],
@@ -129,11 +127,6 @@ async function initiateBoosterSeparation({ state, client }) {
     Object.assign(falcon9Heavy.rightCore, cores.right);
 }
 
-async function startBoosterSteps({ client, state }) {
-    client.stream.on('message', rightBoosterStreamUpdate(client, state));
-    client.stream.on('message', leftBoosterStreamUpdate(client, state));
-}
-
 function setRCSForward(value) {
     return async function secondStageBoost({ state }) {
         let { falcon9Heavy } = state;
@@ -143,12 +136,12 @@ function setRCSForward(value) {
 
 async function flipCentralCore({ state }) {
     let { falcon9Heavy } = state;
-    const vessel = await falcon9Heavy.centerCore.fuelTank.vessel.get();
-    let centralCore = await modelBuilder.buildCentralCoreAfterSeparation(vessel);
-    Object.assign(falcon9Heavy.centerCore, centralCore);
-    await centralCore.control.rcs.set(true);
-    await centralCore.control.sas.set(true);
-    await centralCore.control.sasMode.set('Retrograde');
+    // const vessel = await falcon9Heavy.centerCore.fuelTank.vessel.get();
+    // let centralCore = await modelBuilder.buildCentralCoreAfterSeparation(vessel);
+    // Object.assign(falcon9Heavy.centerCore, centralCore);
+    // await centralCore.control.rcs.set(true);
+    // await centralCore.control.sas.set(true);
+    // await centralCore.control.sasMode.set('Retrograde');
 }
 
 async function done({ client }) {
