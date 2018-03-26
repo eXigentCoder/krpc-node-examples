@@ -50,7 +50,7 @@ async function setBoosterAutoPilotReturnTrajectory({ state }) {
     let { falcon9Heavy } = state;
     const core = falcon9Heavy[coreField];
     await core.autoPilot.engage();
-    await core.autoPilot.targetPitchAndHeading(0, 270);
+    await core.autoPilot.targetPitchAndHeading(0, 271);
     await core.control.rcs.set(true);
 }
 
