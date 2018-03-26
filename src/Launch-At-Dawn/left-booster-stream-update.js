@@ -21,17 +21,17 @@ let stepQueue = [
             displayMessage(`${displayName} Boostback Start`, 3),
             setBoosterThrust(0.7, coreField)
         ],
-        condition: delay(32, 'seconds')
+        condition: delay(32, 'seconds') //rk todo replace this with an altitude check
     },
     {
         action: [displayMessage(`${displayName} Boostback end`, 3), setBoosterThrust(0, coreField)],
-        condition: delay(16.5, 'seconds')
+        condition: delay(14.7, 'seconds')
     },
-    { action: prepForReentry, condition: delay(7, 'seconds') },
-    { action: setBoosterThrust(0.16, coreField), condition: checkBelow(altitudeField, 670) },
+    prepForReentry,
+    { action: setBoosterThrust(0.16, coreField), condition: checkBelow(altitudeField, 645) },
     { action: deployLandingGear, condition: checkBelow(altitudeField, 500) },
-    { action: setBoosterThrust(0, coreField), condition: delay(10.1, 'seconds') },
-    { action: done, condition: delay(160, 'seconds') }
+    { action: setBoosterThrust(0, coreField), condition: delay(7.7, 'seconds') },
+    { action: done, condition: delay(10, 'seconds') }
 ];
 
 module.exports = function(client, state) {
@@ -50,7 +50,7 @@ async function setBoosterAutoPilotReturnTrajectory({ state }) {
     let { falcon9Heavy } = state;
     const core = falcon9Heavy[coreField];
     await core.autoPilot.engage();
-    await core.autoPilot.targetPitchAndHeading(0, 269.65);
+    await core.autoPilot.targetPitchAndHeading(0, 269.665);
     await core.control.rcs.set(true);
 }
 

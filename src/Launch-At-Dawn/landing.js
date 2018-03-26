@@ -2,7 +2,7 @@
 const { createClient, spaceCenter } = require('krpc-node');
 const _ = require('lodash');
 const modelBuilder = require('./model-builder');
-const handleStreamUpdate = require('./handle-stream-update');
+const landingStreamUpdate = require('./landing-stream-update');
 const saveGameNames = require('./save-game-names');
 const returnFunctionOptions = { _fn: true };
 let _client;
@@ -11,11 +11,11 @@ let _client;
     const client = await createClient();
     try {
         _client = client;
-        await client.send(spaceCenter.load(saveGameNames.pad));
+        await client.send(spaceCenter.load(saveGameNames.preSep));
         const falcon9Heavy = await modelBuilder.buildFalcon9OnPad(client);
         await client.connectToStreamServer();
         await registerStreams(falcon9Heavy, client);
-        client.stream.on('message', handleStreamUpdate(client, falcon9Heavy));
+        client.stream.on('message', landingStreamUpdate(client, falcon9Heavy));
     } catch (err) {
         await client.close();
         console.error('Error running script', err);
