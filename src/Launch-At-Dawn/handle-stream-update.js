@@ -153,9 +153,5 @@ async function flipCentralCore({ state }) {
 }
 
 async function done({ client }) {
-    console.log('closing');
-    await client.close();
-    console.log('Done!');
-    // eslint-disable-next-line no-process-exit
-    process.exit(0);
+    console.log('Done with core stream');
 }
