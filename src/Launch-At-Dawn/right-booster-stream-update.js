@@ -25,12 +25,12 @@ let stepQueue = [
     },
     {
         action: [displayMessage(`${displayName} Boostback end`, 3), setBoosterThrust(0, coreField)],
-        condition: delay(14.7, 'seconds')
+        condition: delay(14.8, 'seconds')
     },
     prepForReentry,
-    { action: setBoosterThrust(0.16, coreField), condition: checkBelow(altitudeField, 645) },
+    { action: setBoosterThrust(0.16, coreField), condition: checkBelow(altitudeField, 630) },
     { action: deployLandingGear, condition: checkBelow(altitudeField, 500) },
-    { action: setBoosterThrust(0, coreField), condition: delay(7.7, 'seconds') },
+    { action: setBoosterThrust(0, coreField), condition: delay(7.8, 'seconds') },
     { action: done, condition: delay(160, 'seconds') }
 ];
 
