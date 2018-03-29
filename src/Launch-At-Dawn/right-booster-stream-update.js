@@ -9,6 +9,7 @@ const checkBelow = require('./conditions/check-below');
 const coreField = 'rightCore';
 const displayName = 'Right Core';
 const altitudeField = coreField + 'Altitude';
+const airSpeedField = coreField + 'Speed';
 const controlPoint = 'SpaceX Falcon 9 Flight Control System';
 const { spaceCenter } = require('krpc-node');
 
@@ -28,9 +29,9 @@ let stepQueue = [
         condition: delay(14.8, 'seconds')
     },
     prepForReentry,
-    { action: setBoosterThrust(0.16, coreField), condition: checkBelow(altitudeField, 630) },
+    { action: setBoosterThrust(0.16, coreField), condition: checkBelow(altitudeField, 638) },
     { action: deployLandingGear, condition: checkBelow(altitudeField, 500) },
-    { action: setBoosterThrust(0, coreField), condition: delay(7.8, 'seconds') },
+    { action: setBoosterThrust(0, coreField), condition: checkBelow(airSpeedField, 3) },
     { action: done, condition: delay(160, 'seconds') }
 ];
 
@@ -65,6 +66,10 @@ async function prepForReentry({ state, client }) {
         returnFunctionOptions
     );
     await client.addStream(getAltitudeCall, altitudeField);
+    let getAirSpeedCall = await falcon9Heavy[coreField].flight.trueAirSpeed.get(
+        returnFunctionOptions
+    );
+    await client.addStream(getAirSpeedCall, airSpeedField);
 }
 
 async function deployLandingGear({ state }) {
